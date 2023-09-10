@@ -75,7 +75,7 @@ public:
                 std::cout << "Current details:" << std::endl;
 
                 // Print current details
-                for (size_t j = i; j < i + 7; j++) {
+                for (size_t j = i; j < i + 8; j++) {
                     std::cout << lines[j] << std::endl;
                 }
 
@@ -113,6 +113,11 @@ public:
                 std::string newExpiredDate;
                 std::getline(std::cin, newExpiredDate);
                 lines[i + 6] = "Expired Date: " + newExpiredDate;
+
+                std::cout << "City: ";
+                std::string newCity;
+                std::getline(std::cin, newCity);
+                lines[i + 7] = "City: " + newCity;
 
                 std::ofstream outputFile(fileName);
                 if (outputFile) {

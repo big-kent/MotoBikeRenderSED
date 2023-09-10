@@ -12,7 +12,7 @@ public:
 
     static bool registerUser(const std::string& username, const std::string& password, const std::string& confirmPassword, PaymentMethod paymentMethod,
                              const std::string& fullName, const std::string& phone, const std::string& idType,
-                             const std::string& idNumber, const std::string& licenseNumber, const std::string& expiryDate) {
+                             const std::string& idNumber, const std::string& licenseNumber, const std::string& expiryDate, const std::string& City) {
         if (password == confirmPassword) {
             // Check if the username already exists in userAccount.txt
             if (isUsernameInFile(username, "userAccount.txt")) {
@@ -49,6 +49,7 @@ public:
                     userProfileFile << "Driver's License Number: " << licenseNumber << "\n";
                     userProfileFile << "Expired Date: " << expiryDate << "\n";
                     userProfileFile << "MotorbikeRentingID: 0\n"; // Assuming an initial value
+                    userProfileFile << "City: " << City << "\n";
 
                     userProfileFile.close();
 

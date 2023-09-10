@@ -95,8 +95,12 @@ int main() {
                                 string expiryDate;
                                 cin >> expiryDate;
 
+                                cout << "Please enter the city you are live in (e.g, Ho Chi Minh/ Ha Noi):";
+                                string City;
+                                cin >> City;
+
                                 if (newPassword == confirmPassword) {
-                                    if (RegisterAccount::registerUser(newUsername, newPassword, confirmPassword, paymentMethod, fullName, phone, idType, idNumber, licenseNumber, expiryDate)) {
+                                    if (RegisterAccount::registerUser(newUsername, newPassword, confirmPassword, paymentMethod, fullName, phone, idType, idNumber, licenseNumber, expiryDate, City)) {
                                         cout << "Registration successful. You can now log in as a user." << endl;
                                         cout << "\nLogin successfully. Welcome, our member " << newUsername << "!" << endl;
 

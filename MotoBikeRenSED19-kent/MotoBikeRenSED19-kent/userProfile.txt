@@ -6,6 +6,7 @@ ID Number: 1234
 Driver's License Number: 123
 Expired Date: 07/23
 MotorbikeRentingID: 0
+City: Ho Chi Minh
 
 Username: lam
 Full Name: lam
@@ -15,3 +16,4 @@ ID Number: 123
 Driver's License Number: 07/2023
 Expired Date: 07/2023
 MotorbikeRentingID: 0
+City: Ha Noi
