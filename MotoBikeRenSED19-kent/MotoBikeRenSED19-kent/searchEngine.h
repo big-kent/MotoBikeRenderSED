@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <algorithm> // Add this line for std::transform
+
 
 class SearchEngine {
 public:
@@ -16,6 +18,9 @@ public:
         std::cin.ignore();
         std::getline(std::cin, searchCity);
 
+        // Convert the searchCity to lowercase (or uppercase) for case-insensitive comparison
+        std::transform(searchCity.begin(), searchCity.end(), searchCity.begin(), ::tolower);
+
         std::ifstream productDetailFile("ProductDetail.txt");
         bool foundMotorbikeInCity = false;
         std::vector<std::string> motorbikeDetails;
@@ -24,7 +29,11 @@ public:
         bool cityStatementDisplayed = false; // To track if the city statement is displayed
 
         while (std::getline(productDetailFile, line)) {
-            if (line.find("city: " + searchCity) != std::string::npos) {
+            // Convert the line to lowercase (or uppercase) for case-insensitive comparison
+            std::string lowercaseLine = line;
+            std::transform(lowercaseLine.begin(), lowercaseLine.end(), lowercaseLine.begin(), ::tolower);
+
+            if (lowercaseLine.find("city: " + searchCity) != std::string::npos) {
                 foundMotorbikeInCity = true;
                 // Display the city statement only once
                 if (!cityStatementDisplayed) {
@@ -52,13 +61,26 @@ public:
     }
 
 
+
+    static void toLowerCase(std::string& str) {
+        std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+    }
+
     static void searchUserInformation(const std::string& username) {
         std::ifstream userProfileFile("userProfile.txt");
         std::string line;
         bool foundUser = false;
 
+        // Convert the input username to lowercase for case-insensitive comparison
+        std::string lowercaseUsername = username;
+        toLowerCase(lowercaseUsername);
+
         while (std::getline(userProfileFile, line)) {
-            if (line.find("Username: " + username) != std::string::npos) {
+            // Convert the username from the file to lowercase for comparison
+            std::string lowercaseLine = line;
+            toLowerCase(lowercaseLine);
+
+            if (lowercaseLine.find("username: " + lowercaseUsername) != std::string::npos) {
                 foundUser = true;
                 std::cout << "User information for username: " << username << std::endl;
 
