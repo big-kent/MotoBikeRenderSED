@@ -26,7 +26,7 @@ Rate ID: 65432
 Product status: available
 Score: 8
 Comment: good vehicle
-city: Vung Tau
+city: Ha Noi
 
 MotorbikeID: 98765
 Model: suzuki
@@ -41,4 +41,4 @@ Rate ID: 98745
 Product status: available
 Score: 8
 Comment: good vehicle
-city: Vung Tau
+city: Ha Noi
