@@ -140,7 +140,6 @@ public:
         }
     }
 
-
     static void rentMotorbike() {
         std::cout << "Motorbike rented successfully!" << std::endl;
     }
