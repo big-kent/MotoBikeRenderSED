@@ -82,7 +82,7 @@ public:
 
             if (lowercaseLine.find("username: " + lowercaseUsername) != std::string::npos) {
                 foundUser = true;
-                std::cout << "User information for username: " << username << std::endl;
+                std::cout << "User information for username: " << username <<"\n"<< std::endl;
 
                 // Display user information
                 for (size_t i = 0; i < 8; i++) {
