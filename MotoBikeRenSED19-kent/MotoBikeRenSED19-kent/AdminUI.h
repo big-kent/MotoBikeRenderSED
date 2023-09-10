@@ -81,10 +81,11 @@ private:
         if (userFile.is_open()) {
             std::string username;
             std::string password;
+            std::string creditPoint;
 
             std::cout << "\nList of User Accounts:" << std::endl;
-            while (userFile >> username >> password) {
-                std::cout << "Username: " << username << "\tPassword: " << password << std::endl;
+            while (userFile >> username >> password >> creditPoint) {
+                std::cout << "Username: " << username << "\tPassword: " << password << "\tCredit Point: " << creditPoint << std::endl ;
             }
 
             userFile.close();

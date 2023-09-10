@@ -14,7 +14,7 @@ int main() {
     int userType;
     string username;
     string password;
-    
+    bool returnToMainMenu = false;
     while (true) {
         cout << "EEET2482/COSC2082 ASSIGNMENT" << endl;
         cout << "MOTORBIKE RENTAL APPLICATION" << endl;
@@ -119,11 +119,13 @@ int main() {
                             SearchEngine::searchMotorbikesByCity();
                             break;
                         case 4:
-                            cout << "Exiting the program. Goodbye!" << endl;
-                            return 0;
+                            cout << "Returning to the main menu!\n" << endl;
+                            returnToMainMenu = true;
                         default:
-                            cout << "Invalid choice. Please enter a valid option (1/2/3/4)." << endl;
                             break;
+                    }
+                    if (returnToMainMenu|| userType == 4 ) {
+                        break;
                     }
                 }
                 break;

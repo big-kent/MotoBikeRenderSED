@@ -63,7 +63,7 @@ public:
                 std::cout << "User information for username: " << username << std::endl;
 
                 // Display user information
-                for (size_t i = 0; i < 10; i++) {
+                for (size_t i = 0; i < 7; i++) {
                     if (!std::getline(userProfileFile, line)) {
                         break;
                     }

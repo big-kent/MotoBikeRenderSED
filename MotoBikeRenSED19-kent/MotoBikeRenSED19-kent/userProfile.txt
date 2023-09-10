@@ -1,8 +1,17 @@
 Username: khanh
 Full Name: khanh
-Phone: 12
+Phone: 123
+ID Type: ccd
+ID Number: 1234
+Driver's License Number: 123
+Expired Date: 07/23
+MotorbikeRentingID: 0
+
+Username: lam
+Full Name: lam
+Phone: 12345
 ID Type: passport
-ID Number: 12
-Driver's License Number: 12
-Expired Date: 07/12
+ID Number: 123
+Driver's License Number: 07/2023
+Expired Date: 07/2023
 MotorbikeRentingID: 0
