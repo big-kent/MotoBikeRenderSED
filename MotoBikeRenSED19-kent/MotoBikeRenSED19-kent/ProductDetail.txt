@@ -1,0 +1,44 @@
+MotorbikeID: 12345
+Model: yamaha
+Color: blue
+Engine Size: 600
+Transmission Mode: cash
+Year Made: 2023
+Description: quick
+Owner ID: 123
+Expected Rented Rate: 10%
+Rate ID: 12345
+product status: available
+Score: 8
+Comment: good vehicle
+city: Ho Chi Minh
+
+MotorbikeID: 45678
+Model: Honda
+Color: yellow
+Engine Size: 800
+Transmission Mode: Manual
+Year Made: 2021
+Description: comfortable
+Owner ID: 789
+Expected Rented Rate: 8%
+Rate ID: 65432
+Product status: available
+Score: 8
+Comment: good vehicle
+city: Vung Tau
+
+MotorbikeID: 98765
+Model: suzuki
+Color: orange
+Engine Size: 400
+Transmission Mode: cash
+Year Made: 2020
+Description: fast
+Owner ID: 561
+Expected Rented Rate: 6%
+Rate ID: 98745
+Product status: available
+Score: 8
+Comment: good vehicle
+city: Vung Tau

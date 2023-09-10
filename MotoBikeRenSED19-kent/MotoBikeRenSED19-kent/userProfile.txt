@@ -1,0 +1,8 @@
+Username: khanh
+Full Name: khanh
+Phone: 12
+ID Type: passport
+ID Number: 12
+Driver's License Number: 12
+Expired Date: 07/12
+MotorbikeRentingID: 0
