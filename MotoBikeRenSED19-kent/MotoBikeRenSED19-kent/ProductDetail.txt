@@ -42,3 +42,153 @@ Product status: available
 Score: 8
 Comment: good vehicle
 city: Ha Noi
+
+MotorbikeID: 11111
+Model: Honda
+Color: Red
+Engine Size: 150
+Transmission Mode: Automatic
+Year Made: 2019
+Description: Fuel-efficient
+Owner ID: 1001
+Expected Rented Rate: 5%
+Rate ID: 2001
+Product status: available
+Score: 7
+Comment: Great for city commuting
+City: Ho Chi Minh
+
+MotorbikeID: 22222
+Model: Yamaha
+Color: Blue
+Engine Size: 250
+Transmission Mode: Manual
+Year Made: 2021
+Description: Sporty design
+Owner ID: 1002
+Expected Rented Rate: 7%
+Rate ID: 2002
+Product status: available
+Score: 9
+Comment: Excellent handling
+City: Ha Noi
+
+MotorbikeID: 33333
+Model: Vespa
+Color: White
+Engine Size: 125
+Transmission Mode: Automatic
+Year Made: 2018
+Description: Stylish and comfortable
+Owner ID: 1003
+Expected Rented Rate: 6%
+Rate ID: 2003
+Product status: available
+Score: 8
+Comment: Perfect for city exploration
+City: Ho Chi Minh
+
+MotorbikeID: 44444
+Model: Kawasaki
+Color: Green
+Engine Size: 500
+Transmission Mode: Manual
+Year Made: 2022
+Description: Powerful and rugged
+Owner ID: 1004
+Expected Rented Rate: 8%
+Rate ID: 2004
+Product status: available
+Score: 9
+Comment: Great for long rides
+City: Ha Noi
+
+MotorbikeID: 55555
+Model: Harley-Davidson
+Color: Black
+Engine Size: 750
+Transmission Mode: Manual
+Year Made: 2017
+Description: Classic cruiser
+Owner ID: 1005
+Expected Rented Rate: 9%
+Rate ID: 2005
+Product status: available
+Score: 7
+Comment: Ideal for motorcycle enthusiasts
+City: Ho Chi Minh
+
+MotorbikeID: 66666
+Model: Suzuki
+Color: Yellow
+Engine Size: 200
+Transmission Mode: Manual
+Year Made: 2020
+Description: Agile and reliable
+Owner ID: 1006
+Expected Rented Rate: 6%
+Rate ID: 2006
+Product status: available
+Score: 8
+Comment: Versatile for city rides
+City: Ha Noi
+
+MotorbikeID: 77777
+Model: Honda
+Color: Silver
+Engine Size: 180
+Transmission Mode: Automatic
+Year Made: 2019
+Description: Smooth and efficient
+Owner ID: 1007
+Expected Rented Rate: 5%
+Rate ID: 2007
+Product status: available
+Score: 7
+Comment: Perfect for daily commuting
+City: Ho Chi Minh
+
+MotorbikeID: 88888
+Model: Yamaha
+Color: Black
+Engine Size: 300
+Transmission Mode: Automatic
+Year Made: 2021
+Description: Sleek and modern
+Owner ID: 1008
+Expected Rented Rate: 7%
+Rate ID: 2008
+Product status: available
+Score: 9
+Comment: A great all-rounder
+City: Ha Noi
+
+MotorbikeID: 99999
+Model: Ducati
+Color: Red
+Engine Size: 1200
+Transmission Mode: Manual
+Year Made: 2022
+Description: High-performance beast
+Owner ID: 1009
+Expected Rented Rate: 8%
+Rate ID: 2009
+Product status: available
+Score: 9
+Comment: Thrill-seeker's dream
+City: Ho Chi Minh
+
+MotorbikeID: 10101
+Model: BMW
+Color: Blue
+Engine Size: 800
+Transmission Mode: Manual
+Year Made: 2023
+Description: Cutting-edge technology
+Owner ID: 1010
+Expected Rented Rate: 9%
+Rate ID: 2010
+Product status: available
+Score: 10
+Comment: Unmatched performance
+City: Ha Noi
