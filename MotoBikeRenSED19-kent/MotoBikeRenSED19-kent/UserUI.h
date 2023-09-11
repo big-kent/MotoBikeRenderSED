@@ -146,7 +146,49 @@ public:
     }
 
     static void rentMotorbike() {
-        std::cout << "Motorbike rented successfully!" << std::endl;
+        // Prompt the user to enter the city they want to rent a motorbike in.
+        std::cout << "\nEnter the city where you want to rent a motorbike: ";
+        std::string searchCity;
+        std::cin.ignore();
+        std::getline(std::cin, searchCity);
+
+        // Open the ProductDetail.txt file for reading.
+        std::ifstream productDetailFile("ProductDetail.txt");
+        std::string line;
+        bool foundMotorbikeInCity = false;
+        std::vector<std::string> motorbikeDetails;
+
+        // Search for available motorbikes in the specified city.
+        while (std::getline(productDetailFile, line)) {
+            if (line.find("City: " + searchCity) != std::string::npos) {
+                // Check if the product status is available.
+                while (std::getline(productDetailFile, line) && line.find("Product status: available") == std::string::npos);
+
+                if (line.find("Product status: available") != std::string::npos) {
+                    foundMotorbikeInCity = true;
+
+                    // Display the city statement only once.
+                    if (!motorbikeDetails.empty()) {
+                        std::cout << "\nThe available motorbikes in " << searchCity << " city:" << std::endl;
+
+                        // Display motorbike details and add a blank line between motorbikes.
+                        for (const std::string& detail : motorbikeDetails) {
+                            std::cout << detail << std::endl;
+                        }
+                        std::cout << std::endl; // Add a blank line
+                    }
+
+                    motorbikeDetails.clear(); // Clear the details for the next motorbike.
+                }
+            }
+            motorbikeDetails.push_back(line);
+        }
+
+        productDetailFile.close();
+
+        if (!foundMotorbikeInCity) {
+            std::cout << "No available motorbikes found in " << searchCity << " City." << std::endl;
+        }
     }
 
 };

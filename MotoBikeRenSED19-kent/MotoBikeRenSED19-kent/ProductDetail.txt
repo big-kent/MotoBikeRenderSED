@@ -8,10 +8,10 @@ Description: quick
 Owner ID: 123
 Expected Rented Rate: 10%
 Rate ID: 12345
-product status: available
+Product status: unavailable
 Score: 8
 Comment: good vehicle
-city: Ho Chi Minh
+City: Ho Chi Minh
 
 MotorbikeID: 45678
 Model: Honda
@@ -26,7 +26,7 @@ Rate ID: 65432
 Product status: available
 Score: 8
 Comment: good vehicle
-city: Ha Noi
+City: Ho Chi Minh
 
 MotorbikeID: 98765
 Model: suzuki
@@ -41,7 +41,7 @@ Rate ID: 98745
 Product status: available
 Score: 8
 Comment: good vehicle
-city: Ha Noi
+City: Ha Noi
 
 MotorbikeID: 11111
 Model: Honda

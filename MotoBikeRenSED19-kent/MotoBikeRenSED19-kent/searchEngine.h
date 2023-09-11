@@ -33,7 +33,7 @@ public:
             std::string lowercaseLine = line;
             std::transform(lowercaseLine.begin(), lowercaseLine.end(), lowercaseLine.begin(), ::tolower);
 
-            if (lowercaseLine.find("city: " + searchCity) != std::string::npos) {
+            if (lowercaseLine.find("City: " + searchCity) != std::string::npos) {
                 foundMotorbikeInCity = true;
                 // Display the city statement only once
                 if (!cityStatementDisplayed) {
@@ -49,7 +49,7 @@ public:
             }
             motorbikeDetails.push_back(line);
             if (motorbikeDetails.size() > 13) {
-                motorbikeDetails.erase(motorbikeDetails.begin()); // Limit to 11 lines before the city line
+                motorbikeDetails.erase(motorbikeDetails.begin()); // Limit to 13 lines before the city line
             }
         }
 

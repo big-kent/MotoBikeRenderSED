@@ -18,3 +18,4 @@ vd:
 
 Question:
 time period detail: overlapped quá thời gian
+
