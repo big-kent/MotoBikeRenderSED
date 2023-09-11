@@ -146,50 +146,43 @@ public:
     }
 
     static void rentMotorbike() {
-        // Prompt the user to enter the city they want to rent a motorbike in.
-        std::cout << "\nEnter the city where you want to rent a motorbike: ";
+        std::cout << "Enter the city where you want to rent a motorbike: ";
         std::string searchCity;
         std::cin.ignore();
         std::getline(std::cin, searchCity);
 
-        // Open the ProductDetail.txt file for reading.
         std::ifstream productDetailFile("ProductDetail.txt");
+        bool foundMotorbikeDetails = false;
+
         std::string line;
-        bool foundMotorbikeInCity = false;
         std::vector<std::string> motorbikeDetails;
 
-        // Search for available motorbikes in the specified city.
         while (std::getline(productDetailFile, line)) {
-            if (line.find("City: " + searchCity) != std::string::npos) {
-                // Check if the product status is available.
-                while (std::getline(productDetailFile, line) && line.find("Product status: available") == std::string::npos);
-
-                if (line.find("Product status: available") != std::string::npos) {
-                    foundMotorbikeInCity = true;
-
-                    // Display the city statement only once.
-                    if (!motorbikeDetails.empty()) {
-                        std::cout << "\nThe available motorbikes in " << searchCity << " city:" << std::endl;
-
-                        // Display motorbike details and add a blank line between motorbikes.
-                        for (const std::string& detail : motorbikeDetails) {
-                            std::cout << detail << std::endl;
-                        }
-                        std::cout << std::endl; // Add a blank line
-                    }
-
-                    motorbikeDetails.clear(); // Clear the details for the next motorbike.
-                }
-            }
             motorbikeDetails.push_back(line);
+
+            // Check if both conditions are met
+            if ((line.find("City: " + searchCity) != std::string::npos) && (line.find("Product status: available") != std::string::npos)) {
+                foundMotorbikeDetails = true; // Found the city and product status available
+
+                // Display motorbike details (previous 13 lines from the current line)
+                for (size_t i = motorbikeDetails.size() - 14; i < motorbikeDetails.size(); ++i) {
+                    std::cout << motorbikeDetails[i] << std::endl;
+                }
+                std::cout << std::endl;
+
+                motorbikeDetails.clear(); // Clear the details for the next motorbike
+            }
         }
 
         productDetailFile.close();
 
-        if (!foundMotorbikeInCity) {
+        if (!foundMotorbikeDetails) {
             std::cout << "No available motorbikes found in " << searchCity << " City." << std::endl;
         }
     }
+
+
+
 
 };
 
