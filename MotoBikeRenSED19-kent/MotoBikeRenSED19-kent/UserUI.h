@@ -145,54 +145,50 @@ public:
         }
     }
 
-static void rentMotorbike() {
-    std::cout << "Enter the city where you want to rent a motorbike: ";
-    std::string searchCity;
-    std::cin.ignore();
-    std::getline(std::cin, searchCity);
+    static void rentMotorbike() {
+        std::cout << "Enter the city where you want to rent a motorbike: ";
+        std::string searchCity;
+        std::cin.ignore();
+        std::getline(std::cin, searchCity);
 
-    std::ifstream productDetailFile("ProductDetail.txt");
-    bool foundMotorbikeInCity = false;
-    bool foundProductStatusAvailable = false;
+        std::ifstream productDetailFile("ProductDetail.txt");
+        bool foundMotorbikeInCity = false;
+        bool foundProductStatusAvailable = false;
 
-    std::string line;
-    std::vector<std::string> motorbikeDetails;
+        std::string line;
+        std::vector<std::string> motorbikeDetails;
 
-    while (std::getline(productDetailFile, line)) {
-        if (line.find("City: " + searchCity) != std::string::npos) {
-            foundMotorbikeInCity = true; // Found the city
-        }
-        if (line.find("Product status: available") != std::string::npos) {
-            foundProductStatusAvailable = true; // Found product status available
+        while (std::getline(productDetailFile, line)) {
+            if (line.find("City: " + searchCity) != std::string::npos) {
+                foundMotorbikeInCity = true; // Found the city
+            }
+            if (line.find("Product status: available") != std::string::npos) {
+                foundProductStatusAvailable = true; // Found product status available
 
-            // Display motorbike details if both conditions are met
-            if (foundMotorbikeInCity) {
-                for (const std::string& detail : motorbikeDetails) {
-                    std::cout << detail << std::endl;
+                // Display motorbike details if both conditions are met
+                if (foundMotorbikeInCity) {
+                    for (const std::string& detail : motorbikeDetails) {
+                        std::cout << detail << std::endl;
+                    }
+                    std::cout << std::endl;
                 }
-                std::cout << std::endl;
+
+                motorbikeDetails.clear(); // Clear the details for the next motorbike
+                foundMotorbikeInCity = false; // Reset the city flag
             }
 
-            motorbikeDetails.clear(); // Clear the details for the next motorbike
-            foundMotorbikeInCity = false; // Reset the city flag
+            motorbikeDetails.push_back(line);
+            if (motorbikeDetails.size() > 13) {
+                motorbikeDetails.erase(motorbikeDetails.begin()); // Limit to 13 lines before the current line
+            }
         }
 
-        motorbikeDetails.push_back(line);
-        if (motorbikeDetails.size() > 13) {
-            motorbikeDetails.erase(motorbikeDetails.begin()); // Limit to 13 lines before the current line
+        productDetailFile.close();
+
+        if (!foundProductStatusAvailable) {
+            std::cout << "No available motorbikes found in " << searchCity << " City." << std::endl;
         }
     }
-
-    productDetailFile.close();
-
-    if (!foundProductStatusAvailable) {
-        std::cout << "No available motorbikes found in " << searchCity << " City." << std::endl;
-    }
-}
-
-
-
-
 };
 
 #endif // USERUI_H
