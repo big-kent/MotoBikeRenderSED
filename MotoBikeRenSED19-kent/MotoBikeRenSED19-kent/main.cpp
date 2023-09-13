@@ -1,5 +1,4 @@
 #include <iostream>
-#include "AdminLogin.h"
 #include "UserLogin.h"
 #include "RegisterAccount.h"
 #include "AdminUI.h"
@@ -153,7 +152,7 @@ int main() {
                 cout << "Enter password: ";
                 cin >> password;
 
-                if (AdminLogin::isAdminLoginValid(username, password)) {
+                if (UserLogin::isAdminLoginValid(username, password)) {
                     cout << "\nLogin to admin successfully. Welcome !!!" << endl;
                     AdminUI::showMenu(); // Show the admin menu
                 } else {
