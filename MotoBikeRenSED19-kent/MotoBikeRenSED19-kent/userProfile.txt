@@ -1,25 +1,3 @@
-Username: khanh
-Full Name: khanh
-Phone: 123
-ID Type: ccd
-ID Number: 1234
-Driver's License Number: 123
-Expired Date: 07/23
-MotorbikeRentingID: 0
-Score: 9
-City: Ho Chi Minh
-
-Username: lam
-Full Name: lam
-Phone: 12345
-ID Type: passport
-ID Number: 123
-Driver's License Number: 456
-Expired Date: 07/2023
-MotorbikeRentingID: 0
-Score: 8
-City: Ha Noi
-
 Username: kent
 Full Name: Lu Minh Khang
 Phone: 0114477
@@ -28,5 +6,14 @@ ID Number: 0225588
 Driver's License Number: 0336699
 Expired Date: 01/27
 MotorbikeRentingID: 0
-Score: 7
+City: Ho Chi Minh
+
+Username: khanh
+Full Name: Xuan Khanh
+Phone: 0321654
+ID Type: passport
+ID Number: 0568936
+Driver's License Number: 462144321
+Expired Date: 08/28
+MotorbikeRentingID: 0
 City: Ho Chi Minh

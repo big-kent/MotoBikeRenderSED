@@ -1,3 +1,2 @@
-khanh khanh 20
-lam 1234 20
-kent kent 20
+kent kent 20 0
+khanh khanh 20 0
