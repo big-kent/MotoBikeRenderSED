@@ -90,13 +90,14 @@ int main() {
                                 string licenseNumber;
                                 cin >> licenseNumber;
 
-                                cout << "Please enter the expiry date of your driver's license (e.g., 07/12): ";
+                                cout << "Please enter the expiry date of your driver's license (e.g., MM/YY): ";
                                 string expiryDate;
                                 cin >> expiryDate;
 
-                                cout << "Please enter the city you are live in (e.g, Ho Chi Minh/ Ha Noi):";
+                                cout << "Please enter the city you are live in (e.g, Ho Chi Minh/ Ha Noi): ";
                                 string City;
-                                cin >> City;
+                                cin.ignore();
+                                getline(cin, City);
 
                                 if (newPassword == confirmPassword) {
                                     if (RegisterAccount::registerUser(newUsername, newPassword, confirmPassword, paymentMethod, fullName, phone, idType, idNumber, licenseNumber, expiryDate, City)) {
