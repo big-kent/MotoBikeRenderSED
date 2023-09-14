@@ -25,6 +25,65 @@ struct Motorbike {
     std::string City;
 };
 
+// Function to update the product status in ProductDetail.txt
+void updateProductStatus(int motorbikeID) {
+    // Open the file by name (without specifying a directory)
+    std::ifstream inputFile("ProductDetail.txt");
+
+    if (!inputFile.is_open()) {
+        std::cerr << "Error: Unable to open the input file." << std::endl;
+        return;
+    }
+
+    std::vector<std::string> lines;
+    std::string line;
+
+    // Read the entire content of the file into memory
+    while (std::getline(inputFile, line)) {
+        lines.push_back(line);
+    }
+
+    inputFile.close(); // Close the input file
+
+    bool foundMotorbikeID = false;
+    bool foundProductStatus = false;
+
+    // Loop through the lines and find the specified Motorbike ID
+    for (int i = 0; i < lines.size(); ++i) {
+        if (!foundMotorbikeID && lines[i].find("MotorbikeID: " + std::to_string(motorbikeID)) != std::string::npos) {
+            foundMotorbikeID = true;
+        } else if (foundMotorbikeID) {
+            // Check if the line contains "Product status"
+            if (lines[i].find("Product status: ") != std::string::npos) {
+                // Update the "Product status" line to "Product status: unavailable"
+                lines[i] = "Product status: unavailable";
+                foundProductStatus = true;
+                break; // Stop searching after updating
+            }
+        }
+    }
+
+    if (foundMotorbikeID && foundProductStatus) {
+        // Open the file for writing
+        std::ofstream outputFile("ProductDetail.txt");
+
+        if (!outputFile.is_open()) {
+            std::cerr << "Error: Unable to open the output file." << std::endl;
+            return;
+        }
+
+        // Write the modified lines back to the file
+        for (const std::string& updatedLine : lines) {
+            outputFile << updatedLine << std::endl;
+        }
+
+        outputFile.close(); // Close the output file
+        std::cout << "Product status updated successfully." << std::endl;
+    } else {
+        std::cerr << "Motorbike ID not found or Product status not found after the specified Motorbike ID." << std::endl;
+    }
+}
+
 // Function to display motorbike data
 void displayMotorbikeData(const std::vector<Motorbike>& motorbikes, const std::string& desiredCity, int userScore) {
     // Display available motorbikes in the desired city
@@ -170,6 +229,43 @@ void rentMotorbike(const std::string& username) {
 
     // Call the function to display motorbike data with the user's score
     displayMotorbikeData(motorbikes, desiredCity, userScore);
+
+    // Ask the user to enter the ID of the motorbike they want to rent
+    int motorbikeID;
+    std::cout << "Enter the ID of the motorbike you want to rent: ";
+    std::cin >> motorbikeID;
+
+    // Check if the selected motorbike is available and if the user's score is sufficient
+    bool motorbikeFound = false;
+
+    for (Motorbike& bike : motorbikes) {
+        if (bike.MotorbikeID == motorbikeID && bike.City == desiredCity && bike.ProductStatus == "available" && userScore >= bike.Score) {
+            motorbikeFound = true;
+
+            // Prompt the user to confirm the rental
+            std::string confirmation;
+            std::cout << "Do you want to rent this motorbike? (yes/no): ";
+            std::cin >> confirmation;
+
+            if (confirmation == "yes") {
+                // Update the product status in memory to "unavailable"
+                bike.ProductStatus = "unavailable";
+
+                // Update the product status in the file
+                updateProductStatus(motorbikeID);
+
+                std::cout << "Motorbike rented successfully! Product status updated." << std::endl;
+            } else {
+                std::cout << "Rental canceled." << std::endl;
+            }
+
+            break;
+        }
+    }
+
+    if (!motorbikeFound) {
+        std::cout << "Motorbike not available or your score is not sufficient for this motorbike." << std::endl;
+    }
 }
 
 #endif // RENTAL_SYSTEM_H

@@ -39,6 +39,6 @@ Owner ID: 561
 Expected Rented Rate: 6%
 Rate ID: 98745
 Product status: available
-Score: 8
+Score: 9
 Comment: good vehicle
 City: Ho Chi Minh
