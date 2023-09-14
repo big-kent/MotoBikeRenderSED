@@ -41,4 +41,4 @@ Rate ID: 98745
 Product status: available
 Score: 8
 Comment: good vehicle
-City: Ha Noi
+City: Ho Chi Minh
