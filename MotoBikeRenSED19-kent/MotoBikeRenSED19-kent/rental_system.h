@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <map>
 
 // Define a struct to represent a motorbike
 struct Motorbike {
@@ -24,6 +25,81 @@ struct Motorbike {
     std::string Comment;
     std::string City;
 };
+
+// Define a struct to represent a user account
+struct UserAccount {
+    std::string username;
+    std::string password;
+    int credit;
+    int score;
+};
+
+
+
+// Function to read user profile data from userProfile.txt
+std::map<int, std::string> readUserProfileData() {
+    std::map<int, std::string> userProfileData;
+
+    std::ifstream userProfileFile("userProfile.txt");
+    if (!userProfileFile.is_open()) {
+        std::cerr << "Error: Unable to open userProfile.txt." << std::endl;
+        return userProfileData;
+    }
+
+    std::string line;
+    int ownerID = -1;
+
+    while (std::getline(userProfileFile, line)) {
+        if (line.find("Username: ") != std::string::npos) {
+            // Extract the username
+            std::string username = line.substr(10);
+
+            // Read the next line to get the owner's ID
+            std::getline(userProfileFile, line);
+            if (line.find("ID Number: ") != std::string::npos) {
+                int idNumber;
+                sscanf(line.c_str(), "ID Number: %d", &idNumber);
+                userProfileData[idNumber] = username;
+            }
+        }
+    }
+
+    userProfileFile.close();
+    return userProfileData;
+}
+
+// Function to read user account data from userAccount.txt
+std::map<std::string, UserAccount> readUserAccountData() {
+    std::map<std::string, UserAccount> userAccountData;
+
+    std::ifstream userAccountFile("userAccount.txt");
+    if (!userAccountFile.is_open()) {
+        std::cerr << "Error: Unable to open userAccount.txt." << std::endl;
+        return userAccountData;
+    }
+
+    std::string line;
+
+    while (std::getline(userAccountFile, line)) {
+        std::istringstream iss(line);
+        UserAccount userAccount;
+
+        if (iss >> userAccount.username >> userAccount.password >> userAccount.credit >> userAccount.score) {
+            userAccountData[userAccount.username] = userAccount;
+        }
+    }
+
+    userAccountFile.close();
+    return userAccountData;
+}
+
+// Function to send a rental request message
+void sendRentalRequest(const std::string& ownerUsername, const std::string& renterUsername, const Motorbike& motorbike) {
+    // Print a message indicating that the rental request has been sent.
+    std::cout << "Rental request sent from '" << renterUsername << "' to owner '" << ownerUsername
+              << "' for motorbike ID " << motorbike.MotorbikeID << "." << std::endl;
+}
+
 
 // Function to update the product status in ProductDetail.txt
 void updateProductStatus(int motorbikeID) {
@@ -248,13 +324,17 @@ void rentMotorbike(const std::string& username) {
             std::cin >> confirmation;
 
             if (confirmation == "yes") {
-                // Update the product status in memory to "unavailable"
-                bike.ProductStatus = "unavailable";
+                // Find the owner's ID based on the selected motorbike
+                int ownerID = bike.OwnerID;
 
-                // Update the product status in the file
-                updateProductStatus(motorbikeID);
+                // Read user profile data to find the owner's username
+                std::map<int, std::string> userProfileData = readUserProfileData();
+                std::string ownerUsername = userProfileData[ownerID];
 
-                std::cout << "Motorbike rented successfully! Product status updated." << std::endl;
+                // Send a rental request message to the owner
+                sendRentalRequest(ownerUsername, username, bike);
+
+                std::cout << "Rental request sent to the owner." << std::endl;
             } else {
                 std::cout << "Rental canceled." << std::endl;
             }

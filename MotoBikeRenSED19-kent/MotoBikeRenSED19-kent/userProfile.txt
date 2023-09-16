@@ -2,7 +2,7 @@ Username: kent
 Full Name: Lu Minh Khang
 Phone: 0114477
 ID Type: passport
-ID Number: 0225588
+ID Number: 123
 Driver's License Number: 0336699
 Expired Date: 01/27
 MotorbikeRentingID: 0

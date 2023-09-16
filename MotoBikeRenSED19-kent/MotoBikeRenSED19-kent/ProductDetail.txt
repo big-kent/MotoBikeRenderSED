@@ -5,13 +5,14 @@ Engine Size: 600
 Transmission Mode: cash
 Year Made: 2023
 Description: quick
-Owner ID: 123
+Owner username: kent
 Expected Rented Rate: 10%
 Rate ID: 12345
 Product status: unavailable
 Score: 8
 Comment: good vehicle
 City: Ho Chi Minh
+Message: 
 
 MotorbikeID: 45678
 Model: Honda
@@ -20,13 +21,14 @@ Engine Size: 800
 Transmission Mode: Manual
 Year Made: 2021
 Description: comfortable
-Owner ID: 789
+Owner username: kent
 Expected Rented Rate: 8%
 Rate ID: 65432
 Product status: available
 Score: 8
 Comment: good vehicle
 City: Ho Chi Minh
+Message: 
 
 MotorbikeID: 98765
 Model: suzuki
@@ -35,10 +37,11 @@ Engine Size: 400
 Transmission Mode: cash
 Year Made: 2020
 Description: fast
-Owner ID: 561
+Owner username: kent
 Expected Rented Rate: 6%
 Rate ID: 98745
 Product status: available
-Score: 9
+Score: 8
 Comment: good vehicle
 City: Ho Chi Minh
+Message: 
