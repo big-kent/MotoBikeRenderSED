@@ -12,7 +12,6 @@ Product status: unavailable
 Score: 8
 Comment: good vehicle
 City: Ho Chi Minh
-Message: 
 
 MotorbikeID: 45678
 Model: Honda
@@ -28,7 +27,6 @@ Product status: available
 Score: 8
 Comment: good vehicle
 City: Ho Chi Minh
-Message: 
 
 MotorbikeID: 98765
 Model: suzuki
@@ -44,4 +42,3 @@ Product status: available
 Score: 8
 Comment: good vehicle
 City: Ho Chi Minh
-Message: 

@@ -16,7 +16,7 @@ struct Motorbike {
     std::string TransmissionMode;
     int YearMade;
     std::string Description;
-    int OwnerID;
+    std::string ownerUsername;
     float ExpectedRentedRate;
     int RateID;
     std::string ProductStatus;
@@ -101,7 +101,7 @@ void displayMotorbikeData(const std::vector<Motorbike>& motorbikes, const std::s
             std::cout << "Transmission Mode: " << bike.TransmissionMode << std::endl;
             std::cout << "Year Made: " << bike.YearMade << std::endl;
             std::cout << "Description: " << bike.Description << std::endl;
-            std::cout << "Owner ID: " << bike.OwnerID << std::endl;
+            std::cout << "Owner username: " << bike.ownerUsername << std::endl;
             std::cout << "Expected Rented Rate: " << bike.ExpectedRentedRate << "%" << std::endl;
             std::cout << "Rate ID: " << bike.RateID << std::endl;
             std::cout << "Product status: " << bike.ProductStatus << std::endl;
@@ -154,8 +154,8 @@ void rentMotorbike(const std::string& username) {
             sscanf(line.c_str(), "Year Made: %d", &currentMotorbike.YearMade);
         } else if (line.find("Description: ") != std::string::npos) {
             currentMotorbike.Description = line.substr(13);
-        } else if (line.find("Owner ID: ") != std::string::npos) {
-            sscanf(line.c_str(), "Owner ID: %d", &currentMotorbike.OwnerID);
+        } else if (line.find("Owner username: ") != std::string::npos) {
+            currentMotorbike.ownerUsername = line.substr(16);
         } else if (line.find("Expected Rented Rate: ") != std::string::npos) {
             sscanf(line.c_str(), "Expected Rented Rate: %f%%", &currentMotorbike.ExpectedRentedRate);
         } else if (line.find("Rate ID: ") != std::string::npos) {

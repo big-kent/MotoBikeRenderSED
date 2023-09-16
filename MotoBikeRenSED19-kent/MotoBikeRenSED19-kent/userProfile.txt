@@ -7,6 +7,7 @@ Driver's License Number: 0336699
 Expired Date: 01/27
 MotorbikeRentingID: 0
 City: Ho Chi Minh
+Message: 
 
 Username: khanh
 Full Name: Xuan Khanh

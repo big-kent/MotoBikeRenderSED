@@ -185,10 +185,10 @@ private:
                 std::getline(std::cin, newDescription);
                 lines[i + 6] = "Description: " + newDescription;
 
-                std::cout << "Owner ID: ";
+                std::cout << "Owner username: ";
                 std::string newOwnerId;
                 std::getline(std::cin, newOwnerId);
-                lines[i + 7] = "Owner ID: " + newOwnerId;
+                lines[i + 7] = "Owner username: " + newOwnerId;
 
                 std::cout << "Expected Rented Rate: ";
                 std::string newRentedRate;
@@ -264,7 +264,7 @@ private:
             }
 
             // Input the rest of the motorbike details
-            std::string model, color, engineSize, transmissionMode, yearMade, description, ownerId, rentedRate, rateId, productStatus, Score, Comment, City;
+            std::string model, color, engineSize, transmissionMode, yearMade, description, ownerUsername, rentedRate, rateId, productStatus, Score, Comment, City;
 
             std::cin.ignore(); // Clear the newline left in the buffer
 
@@ -287,7 +287,7 @@ private:
             std::getline(std::cin, description);
 
             std::cout << "Owner ID: ";
-            std::getline(std::cin, ownerId);
+            std::getline(std::cin, ownerUsername);
 
             std::cout << "Expected Rented Rate: ";
             std::getline(std::cin, rentedRate);
@@ -315,7 +315,7 @@ private:
             productFile << "Transmission Mode: " << transmissionMode << std::endl;
             productFile << "Year Made: " << yearMade << std::endl;
             productFile << "Description: " << description << std::endl;
-            productFile << "Owner ID: " << ownerId << std::endl;
+            productFile << "Owner ID: " << ownerUsername << std::endl;
             productFile << "Expected Rented Rate: " << rentedRate << std::endl;
             productFile << "Rate ID: " << rateId << std::endl;
             productFile << "Product status: " << productStatus << std::endl;
