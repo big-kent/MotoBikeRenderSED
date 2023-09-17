@@ -16,13 +16,16 @@ struct Motorbike {
     std::string TransmissionMode;
     int YearMade;
     std::string Description;
-    int ownerUsername;
+    std::string ownerUsername;  //anh sửa chỗ này nè lúc đầu là int anh đổi thành string
     float ExpectedRentedRate;
     int RateID;
     std::string ProductStatus;
     int Score;
     std::string Comment;
     std::string City;
+    std::string RentalRequestUsername; //anh thêm cái RentalRequestUsername as an attribute 
+
+   // anh cũng suy nghĩ có nên để RentalRequestUsername này vào class UserProfile ở dưới.
 };
 
 // Function to update the product status in ProductDetail.txt
