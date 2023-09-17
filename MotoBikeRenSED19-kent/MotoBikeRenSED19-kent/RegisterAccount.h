@@ -48,7 +48,6 @@ public:
                     userProfileFile << "ID Number: " << idNumber << "\n";
                     userProfileFile << "Driver's License Number: " << licenseNumber << "\n";
                     userProfileFile << "Expired Date: " << expiryDate << "\n";
-                    userProfileFile << "MotorbikeRentingID: 0\n"; // Assuming an initial value
                     userProfileFile << "City: " << City << "\n";
 
                     userProfileFile.close();

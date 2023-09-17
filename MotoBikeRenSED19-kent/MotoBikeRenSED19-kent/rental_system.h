@@ -16,75 +16,24 @@ struct Motorbike {
     std::string TransmissionMode;
     int YearMade;
     std::string Description;
-    std::string ownerUsername;  //anh sửa chỗ này nè lúc đầu là int anh đổi thành string
+    std::string ownerUsername;
     float ExpectedRentedRate;
     int RateID;
     std::string ProductStatus;
     int Score;
     std::string Comment;
     std::string City;
-
-   // anh cũng suy nghĩ có nên để RentalRequestUsername này vào class UserProfile ở dưới.
 };
 
-// Function to update the product status in ProductDetail.txt
-void updateProductStatus(int motorbikeID) {
-    // Open the file by name (without specifying a directory)
-    std::ifstream inputFile("ProductDetail.txt");
+struct RentalRequest {
+    std::string renterUsername;
+    int motorbikeID;
+    std::string ownerUsername;
+    std::string status; // e.g., "pending", "accepted", "rejected"
+};
 
-    if (!inputFile.is_open()) {
-        std::cerr << "Error: Unable to open the input file." << std::endl;
-        return;
-    }
-
-    std::vector<std::string> lines;
-    std::string line;
-
-    // Read the entire content of the file into memory
-    while (std::getline(inputFile, line)) {
-        lines.push_back(line);
-    }
-
-    inputFile.close(); // Close the input file
-
-    bool foundMotorbikeID = false;
-    bool foundProductStatus = false;
-
-    // Loop through the lines and find the specified Motorbike ID
-    for (int i = 0; i < lines.size(); ++i) {
-        if (!foundMotorbikeID && lines[i].find("MotorbikeID: " + std::to_string(motorbikeID)) != std::string::npos) {
-            foundMotorbikeID = true;
-        } else if (foundMotorbikeID) {
-            // Check if the line contains "Product status"
-            if (lines[i].find("Product status: ") != std::string::npos) {
-                // Update the "Product status" line to "Product status: unavailable"
-                lines[i] = "Product status: unavailable";
-                foundProductStatus = true;
-                break; // Stop searching after updating
-            }
-        }
-    }
-
-    if (foundMotorbikeID && foundProductStatus) {
-        // Open the file for writing
-        std::ofstream outputFile("ProductDetail.txt");
-
-        if (!outputFile.is_open()) {
-            std::cerr << "Error: Unable to open the output file." << std::endl;
-            return;
-        }
-
-        // Write the modified lines back to the file
-        for (const std::string& updatedLine : lines) {
-            outputFile << updatedLine << std::endl;
-        }
-
-        outputFile.close(); // Close the output file
-        std::cout << "Product status updated successfully." << std::endl;
-    } else {
-        std::cerr << "Motorbike ID not found or Product status not found after the specified Motorbike ID." << std::endl;
-    }
-}
+// Create a vector to store rental requests
+std::vector<RentalRequest> rentalRequests;
 
 // Function to display motorbike data
 void displayMotorbikeData(const std::vector<Motorbike>& motorbikes, const std::string& desiredCity, int userScore) {
@@ -94,7 +43,7 @@ void displayMotorbikeData(const std::vector<Motorbike>& motorbikes, const std::s
     bool found = false;
 
     for (const Motorbike& bike : motorbikes) {
-        if (bike.City == desiredCity && bike.ProductStatus == "available" && userScore >= bike.Score) {
+        if (bike.City == desiredCity && bike.ProductStatus == "available" && (userScore >= bike.Score || userScore == 0)) {
             // Display the motorbike information
             std::cout << "MotorbikeID: " << bike.MotorbikeID << std::endl;
             std::cout << "Model: " << bike.Model << std::endl;
@@ -119,6 +68,111 @@ void displayMotorbikeData(const std::vector<Motorbike>& motorbikes, const std::s
         std::cout << "No available motorbikes found in " << desiredCity << " city with a score lower than or equal to your score." << std::endl;
     }
 }
+
+// Function to send a rental request message
+void sendRentalRequest(const std::string& renterUsername, int motorbikeID, const std::string& ownerUsername) {
+    std::cout << "Sending rental request to the motorbike owner..." << std::endl;
+    std::cout << "Request Message: " << renterUsername << " wants to rent your motorbike (ID: " << motorbikeID << ")." << std::endl;
+    std::cout << "Sent to owner: " << ownerUsername << std::endl;
+
+    // Save the rental request
+    RentalRequest request;
+    request.renterUsername = renterUsername;
+    request.motorbikeID = motorbikeID;
+    request.ownerUsername = ownerUsername;
+    request.status = "pending";
+
+    rentalRequests.push_back(request);
+}
+void updateProductStatus(const std::string& motorbikeID, const std::string& newStatus) {
+    std::ifstream inputFile("ProductDetail.txt");
+    if (!inputFile) {
+        std::cerr << "Error: Cannot open ProductDetail.txt for reading." << std::endl;
+        return;
+    }
+
+    std::ofstream outputFile("temp_ProductDetail.txt");
+    if (!outputFile) {
+        std::cerr << "Error: Cannot create temp_ProductDetail.txt for writing." << std::endl;
+        inputFile.close();
+        return;
+    }
+
+    std::string line;
+    bool foundMotorbike = false;
+
+    while (std::getline(inputFile, line)) {
+        if (line.find("MotorbikeID: " + motorbikeID) != std::string::npos) {
+            // Found the motorbike, update its Product status
+            outputFile << line << '\n';
+
+            // Skip lines until we find the "Product status" line
+            while (std::getline(inputFile, line) && line.find("Product status:") == std::string::npos) {
+                outputFile << line << '\n';
+            }
+
+            // Update the "Product status" line
+            outputFile << "Product status: " << newStatus << '\n';
+            foundMotorbike = true;
+        } else {
+            // Copy other lines as they are
+            outputFile << line << '\n';
+        }
+    }
+
+    inputFile.close();
+    outputFile.close();
+
+    // Rename the temp file to replace the original
+    if (foundMotorbike) {
+        if (std::remove("ProductDetail.txt") != 0) {
+            std::cerr << "Error: Unable to remove ProductDetail.txt" << std::endl;
+            return;
+        }
+
+        if (std::rename("temp_ProductDetail.txt", "ProductDetail.txt") != 0) {
+            std::cerr << "Error: Unable to rename temp_ProductDetail.txt" << std::endl;
+        }
+    } else {
+        std::cerr << "Error: Motorbike with ID " << motorbikeID << " not found." << std::endl;
+    }
+}
+
+void viewRentalRequests(const std::string& username) {
+    std::cout << "Pending Rental Requests for User '" << username << "':" << std::endl;
+
+    // Iterate through rentalRequests to find pending requests for the owner
+    for (RentalRequest& request : rentalRequests) {
+        if (request.ownerUsername == username && request.status == "pending") {
+            std::cout << "From: " << request.renterUsername << " (Motorbike ID: " << request.motorbikeID << ")" << std::endl;
+
+            // Prompt owner (kent) for approval
+            std::string approval;
+            do {
+                std::cout << "Do you want to approve this request? (yes/no): ";
+                std::cin >> approval;
+                if (approval != "yes" && approval != "no") {
+                    std::cout << "Invalid input. Please enter 'yes' or 'no'." << std::endl;
+                }
+            } while (approval != "yes" && approval != "no");
+
+            if (approval == "yes") {
+                // Mark the request as approved
+                request.status = "approved";
+                std::cout << "Request approved. " << username << " has granted permission to rent the motorbike." << std::endl;
+
+                // Update the Product status to "unavailable"
+                updateProductStatus(std::to_string(request.motorbikeID), "unavailable");
+            } else {
+                // Mark the request as rejected
+                request.status = "rejected";
+                std::cout << "Request rejected. " << username << " has declined the rental request." << std::endl;
+            }
+        }
+    }
+}
+
+
 
 // Function to rent a motorbike
 void rentMotorbike(const std::string& username) {
@@ -241,7 +295,7 @@ void rentMotorbike(const std::string& username) {
     bool motorbikeFound = false;
 
     for (Motorbike& bike : motorbikes) {
-        if (bike.MotorbikeID == motorbikeID && bike.City == desiredCity && bike.ProductStatus == "available" && userScore >= bike.Score) {
+        if (bike.MotorbikeID == motorbikeID && bike.City == desiredCity && bike.ProductStatus == "available" && (userScore >= bike.Score || userScore == 0)) {
             motorbikeFound = true;
 
             // Prompt the user to confirm the rental
@@ -250,17 +304,20 @@ void rentMotorbike(const std::string& username) {
             std::cin >> confirmation;
 
             if (confirmation == "yes") {
-                // Update the product status in memory to "unavailable"
-                bike.ProductStatus = "unavailable";
+                // Get the owner's username from the motorbike data
+                std::string ownerUsername;
+                for (const auto& bike : motorbikes) {
+                    if (bike.MotorbikeID == motorbikeID) {
+                        ownerUsername = bike.ownerUsername;
+                        break;
+                    }
+                }
 
-                // Update the product status in the file
-                updateProductStatus(motorbikeID);
-
-                std::cout << "Motorbike rented successfully! Product status updated." << std::endl;
+                // Call the function to send the rental request
+                sendRentalRequest(username, motorbikeID, ownerUsername);
             } else {
                 std::cout << "Rental canceled." << std::endl;
             }
-
             break;
         }
     }

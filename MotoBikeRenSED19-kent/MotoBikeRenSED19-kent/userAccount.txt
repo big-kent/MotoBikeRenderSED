@@ -1,2 +1,2 @@
 kent kent 20 8
-khanh khanh 20 8
+khanh khanh 20 0

@@ -19,14 +19,15 @@ public:
             std::cout << "1. Edit User Profile" << std::endl;
             std::cout << "2. Search Motorbikes by City" << std::endl;
             std::cout << "3. Rent a Motorbike" << std::endl;
-            std::cout << "4. Exit" << std::endl;
+            std::cout << "4. View Rental Requests" << std::endl;
+            std::cout << "5. Exit" << std::endl;
             std::cout << "Enter your choice (1-4): ";
 
-            if (!(std::cin >> choice) || choice < 1 || choice > 4) {
+            if (!(std::cin >> choice) || choice < 1 || choice > 5) {
                 // Input is not a valid integer in the range (1-5)
                 std::cin.clear(); // Clear error flags
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear the input buffer
-                std::cout << "Invalid input. Please enter a valid integer choice (1-4).\n" << std::endl;
+                std::cout << "Invalid input. Please enter a valid integer choice (1-5).\n" << std::endl;
                 continue; // Skip the rest of the loop iteration and ask for input again
             }
 
@@ -41,6 +42,9 @@ public:
                     rentMotorbike(username);
                     break;
                 case 4:
+                    viewRentalRequests(username);
+                    break;
+                case 5:
                     std::cout << "Exiting the User Menu. Goodbye!\n" << std::endl;
                     return;
                 default:
