@@ -1,5 +1,4 @@
 // searchEngine.h
-
 #ifndef SEARCH_ENGINE_H
 #define SEARCH_ENGINE_H
 
@@ -97,7 +96,7 @@ public:
         inputFile.close();
 
         // Display available motorbikes in the desired city
-        std::cout << "The motorbikes available in " << searchCity << " city:" << std::endl;
+        std::cout << "The motorbikes available in " << searchCity << " city:\n" << std::endl;
 
         bool found = false;
 
@@ -127,7 +126,7 @@ public:
             std::cout << "No available motorbikes found in " << searchCity << " city." << std::endl;
         }
     }
-    
+
     static void toLowerCase(std::string& str) {
         std::transform(str.begin(), str.end(), str.begin(), ::tolower);
     }
