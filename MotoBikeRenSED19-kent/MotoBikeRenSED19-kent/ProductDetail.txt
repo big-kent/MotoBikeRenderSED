@@ -8,7 +8,7 @@ Description: quick
 Owner username: kent
 Expected Rented Rate: 10%
 Rate ID: 12345
-Product status: unavailable
+Product status: available
 Score: 8
 Comment: good vehicle
 Credit: 5
