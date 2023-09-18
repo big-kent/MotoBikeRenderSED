@@ -21,6 +21,7 @@ struct Motorbike {
     int RateID;
     std::string ProductStatus;
     int Score;
+    int Credit;
     std::string Comment;
     std::string City;
 };
@@ -66,16 +67,13 @@ void displayMotorbikeData(const std::vector<Motorbike>& motorbikes, const std::s
 
     if (!found) {
         std::cout << "No available motorbikes found in " << desiredCity << " city with a score lower than or equal to your score." << std::endl;
+        return;
     }
+    return;
 }
 
 // Function to send a rental request message
 void sendRentalRequest(const std::string& renterUsername, int motorbikeID, const std::string& ownerUsername) {
-    if (renterUsername == ownerUsername) {
-        std::cout << "Cannot rent your own motorbike." << std::endl;
-        return; // Exit the function
-    }
-
     std::cout << "Sending rental request to the motorbike owner..." << std::endl;
     std::cout << "Request Message: " << renterUsername << " wants to rent your motorbike (ID: " << motorbikeID << ")." << std::endl;
     std::cout << "Sent to owner: " << ownerUsername << std::endl;
@@ -144,15 +142,51 @@ void updateProductStatus(const std::string& motorbikeID, const std::string& newS
     }
 }
 
-void viewRentalRequests(const std::string& username) {
-    std::cout << "Pending Rental Requests for User '" << username << "':" << std::endl;
+// Function to view rental requests and approve or reject them
+void viewRentalRequests(const std::string& ownerUsername) {
+    // Open the ProductDetail.txt file to read and update motorbike information
+    std::ifstream productDetailFile("ProductDetail.txt");
+    if (!productDetailFile.is_open()) {
+        std::cerr << "Unable to open ProductDetail.txt." << std::endl;
+        return;
+    }
+
+    // Temporary storage for motorbike details
+    std::vector<std::string> motorbikeDetails;
+    std::string line;
+
+    // Read and store motorbike details
+    while (std::getline(productDetailFile, line)) {
+        motorbikeDetails.push_back(line);
+    }
+
+    // Close the ProductDetail.txt file
+    productDetailFile.close();
+
+    // Open the userAccount.txt file to read and update user information
+    std::ifstream userAccountFile("userAccount.txt");
+    if (!userAccountFile.is_open()) {
+        std::cerr << "Unable to open userAccount.txt." << std::endl;
+        return;
+    }
+
+    // Temporary storage for user account details
+    std::vector<std::string> userAccountDetails;
+
+    // Read and store user account details
+    while (std::getline(userAccountFile, line)) {
+        userAccountDetails.push_back(line);
+    }
+
+    // Close the userAccount.txt file
+    userAccountFile.close();
 
     // Iterate through rentalRequests to find pending requests for the owner
     for (RentalRequest& request : rentalRequests) {
-        if (request.ownerUsername == username && request.status == "pending") {
+        if (request.ownerUsername == ownerUsername && request.status == "pending") {
             std::cout << "From: " << request.renterUsername << " (Motorbike ID: " << request.motorbikeID << ")" << std::endl;
 
-            // Prompt owner (kent) for approval
+            // Prompt owner for approval
             std::string approval;
             do {
                 std::cout << "Do you want to approve this request? (yes/no): ";
@@ -165,18 +199,67 @@ void viewRentalRequests(const std::string& username) {
             if (approval == "yes") {
                 // Mark the request as approved
                 request.status = "approved";
-                std::cout << "Request approved. " << username << " has granted permission to rent the motorbike." << std::endl;
-
+                std::cout << "Request approved. " << ownerUsername << " has granted permission to rent the motorbike." << std::endl;
+                
                 // Update the Product status to "unavailable"
                 updateProductStatus(std::to_string(request.motorbikeID), "unavailable");
+
+                // Find the motorbike with the specified motorbikeID and get its credit (price)
+                int motorbikeCredit = 0;
+                for (size_t i = 0; i < motorbikeDetails.size(); ++i) {
+                    if (motorbikeDetails[i].find("MotorbikeID: " + std::to_string(request.motorbikeID)) != std::string::npos) {
+                        std::istringstream iss(motorbikeDetails[i + 13]);
+                        iss.ignore(8); // Skip "Credit: "
+                        iss >> motorbikeCredit;
+                        break;
+                    }
+                }
+
+                // Find the renter in userAccount.txt and update their credit
+                for (size_t i = 0; i < userAccountDetails.size(); ++i) {
+                    if (userAccountDetails[i].find(request.renterUsername) != std::string::npos) {
+                        std::istringstream iss(userAccountDetails[i]);
+                        std::string dummy, username, password;
+                        int userCredit;
+                        iss >> username >> password >> userCredit;
+
+                        // Check if the user has enough credit to rent the motorbike
+                        if (userCredit >= motorbikeCredit) {
+                            // Subtract the motorbike credit (price) from the user's credit
+                            userCredit -= motorbikeCredit;
+
+                            // Update user credit in userAccountDetails vector
+                            std::ostringstream oss;
+                            oss << username << " " << password << " " << userCredit << " 8";
+                            userAccountDetails[i] = oss.str();
+
+                            std::cout << "Motorbike rented successfully. Credits updated." << std::endl;
+                        } else {
+                            std::cout << "Insufficient credit to rent the motorbike." << std::endl;
+                        }
+                        break;
+                    }
+                }
             } else {
                 // Mark the request as rejected
                 request.status = "rejected";
-                std::cout << "Request rejected. " << username << " has declined the rental request." << std::endl;
+                std::cout << "Request rejected. " << ownerUsername << " has declined the rental request." << std::endl;
             }
         }
     }
+
+    // Write the updated user account details back to userAccount.txt
+    std::ofstream updatedUserAccountFile("userAccount.txt");
+    if (updatedUserAccountFile.is_open()) {
+        for (const auto& detail : userAccountDetails) {
+            updatedUserAccountFile << detail << "\n";
+        }
+        updatedUserAccountFile.close();
+    } else {
+        std::cerr << "Unable to open userAccount.txt for writing." << std::endl;
+    }
 }
+
 
 
 
@@ -249,39 +332,42 @@ void rentMotorbike(const std::string& username) {
         return;
     }
 
-    std::vector<std::pair<std::string, int>> userAccounts;
+std::vector<std::pair<std::string, std::pair<int, int>>> userAccounts;
 
-    // Read user account data and populate the vector
-    std::string userLine;
-    while (std::getline(userAccountFile, userLine)) {
-        std::istringstream userStream(userLine);
-        std::string username, password;
-        int credit, score;
+// Read user account data and populate the vector
+std::string userLine;
+while (std::getline(userAccountFile, userLine)) {
+    std::istringstream userStream(userLine);
+    std::string username, password;
+    int credit, score;
 
-        userStream >> username >> password >> credit >> score;
+    userStream >> username >> password >> credit >> score;
 
-        userAccounts.push_back(std::make_pair(username, score));
+    userAccounts.push_back(std::make_pair(username, std::make_pair(credit, score)));
+}
+
+// Check if the provided username exists in the userAccounts vector
+bool userFound = false;
+std::pair<int, int> userData; // Credit and Score
+
+for (const auto& userAccount : userAccounts) {
+    if (userAccount.first == username) {
+        userFound = true;
+        userData = userAccount.second; // Extract credit and score
+        break;
     }
+}
 
-    // Check if the provided username exists in the userAccounts vector
-    bool userFound = false;
-    int userScore = 0;
+if (!userFound) {
+    std::cout << "User '" << username << "' not found." << std::endl;
+    return;
+}
 
-    for (const auto& userAccount : userAccounts) {
-        if (userAccount.first == username) {
-            userFound = true;
-            userScore = userAccount.second;
-            break;
-        }
-    }
+// Display the user's credit and score on the same line
+int userCredit = userData.first;
+int userScore = userData.second;
+std::cout << "User: " << username << ", Credit: " << userCredit << ", Score: " << userScore <<"\n"<<std::endl;
 
-    if (!userFound) {
-        std::cout << "User '" << username << "' not found." << std::endl;
-        return;
-    }
-
-    // Display the user's score
-    std::cout << "User '" << username << "' Score: " << userScore << std::endl;
 
     // Prompt the user for the desired city
     std::string desiredCity;

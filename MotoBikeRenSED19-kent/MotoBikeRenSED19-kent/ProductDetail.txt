@@ -11,6 +11,7 @@ Rate ID: 12345
 Product status: unavailable
 Score: 8
 Comment: good vehicle
+Credit: 5
 City: Ho Chi Minh
 
 MotorbikeID: 45678
@@ -26,6 +27,7 @@ Rate ID: 65432
 Product status: available
 Score: 8
 Comment: good vehicle
+Credit: 5
 City: Ho Chi Minh
 
 MotorbikeID: 98765
@@ -41,4 +43,5 @@ Rate ID: 98745
 Product status: available
 Score: 8
 Comment: good vehicle
+Credit: 10
 City: Ho Chi Minh
