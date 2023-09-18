@@ -82,10 +82,11 @@ private:
             std::string username;
             std::string password;
             std::string creditPoint;
+            std::string Score;
 
             std::cout << "\nList of User Accounts:" << std::endl;
-            while (userFile >> username >> password >> creditPoint) {
-                std::cout << "Username: " << username << "\tPassword: " << password << "\tCredit Point: " << creditPoint << std::endl ;
+            while (userFile >> username >> password >> creditPoint >> Score) {
+                std::cout << "Username: " << username << "\tPassword: " << password << "\tCredit Point: " << creditPoint << "\t Score: " << Score <<"\n"<<std::endl;
             }
 
             userFile.close();
@@ -186,9 +187,9 @@ private:
                 lines[i + 6] = "Description: " + newDescription;
 
                 std::cout << "Owner username: ";
-                std::string newOwnerId;
-                std::getline(std::cin, newOwnerId);
-                lines[i + 7] = "Owner username: " + newOwnerId;
+                std::string newOwnerUsername;
+                std::getline(std::cin, newOwnerUsername);
+                lines[i + 7] = "Owner username: " + newOwnerUsername;
 
                 std::cout << "Expected Rented Rate: ";
                 std::string newRentedRate;
