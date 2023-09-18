@@ -286,7 +286,7 @@ private:
             std::cout << "Description: ";
             std::getline(std::cin, description);
 
-            std::cout << "Owner ID: ";
+            std::cout << "Owner Username: ";
             std::getline(std::cin, ownerUsername);
 
             std::cout << "Expected Rented Rate: ";
@@ -315,7 +315,7 @@ private:
             productFile << "Transmission Mode: " << transmissionMode << std::endl;
             productFile << "Year Made: " << yearMade << std::endl;
             productFile << "Description: " << description << std::endl;
-            productFile << "Owner ID: " << ownerUsername << std::endl;
+            productFile << "Owner Username: " << ownerUsername << std::endl;
             productFile << "Expected Rented Rate: " << rentedRate << std::endl;
             productFile << "Rate ID: " << rateId << std::endl;
             productFile << "Product status: " << productStatus << std::endl;
