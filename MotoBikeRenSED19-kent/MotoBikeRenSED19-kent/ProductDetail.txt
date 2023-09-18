@@ -45,3 +45,67 @@ Score: 8
 Comment: good vehicle
 Credit: 10
 City: Ho Chi Minh
+
+MotorbikeID: 78901
+Model: Vespa
+Color: white
+Engine Size: 150
+Transmission Mode: Automatic
+Year Made: 2022
+Description: stylish scooter
+Owner username: khanh
+Expected Rented Rate: 7%
+Rate ID: 78902
+Product status: available
+Score: 7
+Comment: perfect for city commuting
+Credit: 4
+City: Ha Noi
+
+MotorbikeID: 23456
+Model: Suzuki
+Color: blue
+Engine Size: 250
+Transmission Mode: Manual
+Year Made: 2021
+Description: versatile and reliable
+Owner username: khanh
+Expected Rented Rate: 8%
+Rate ID: 23457
+Product status: available
+Score: 8
+Comment: great for daily use
+Credit: 6
+City: Ha Noi
+
+MotorbikeID: 54321
+Model: Honda
+Color: black
+Engine Size: 125
+Transmission Mode: Automatic
+Year Made: 2023
+Description: fuel-efficient
+Owner username: khanh
+Expected Rented Rate: 6%
+Rate ID: 54322
+Product status: available
+Score: 7
+Comment: ideal for city traffic
+Credit: 5
+City: Ho Chi Minh
+
+MotorbikeID: 98765
+Model: Yamaha
+Color: red
+Engine Size: 300
+Transmission Mode: Manual
+Year Made: 2022
+Description: agile and fun to ride
+Owner username: khanh
+Expected Rented Rate: 9%
+Rate ID: 98766
+Product status: available
+Score: 8
+Comment: great for urban exploration
+Credit: 7
+City: Ho Chi Minh
