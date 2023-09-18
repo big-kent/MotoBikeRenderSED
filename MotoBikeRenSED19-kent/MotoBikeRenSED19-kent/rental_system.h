@@ -71,6 +71,11 @@ void displayMotorbikeData(const std::vector<Motorbike>& motorbikes, const std::s
 
 // Function to send a rental request message
 void sendRentalRequest(const std::string& renterUsername, int motorbikeID, const std::string& ownerUsername) {
+    if (renterUsername == ownerUsername) {
+        std::cout << "Cannot rent your own motorbike." << std::endl;
+        return; // Exit the function
+    }
+
     std::cout << "Sending rental request to the motorbike owner..." << std::endl;
     std::cout << "Request Message: " << renterUsername << " wants to rent your motorbike (ID: " << motorbikeID << ")." << std::endl;
     std::cout << "Sent to owner: " << ownerUsername << std::endl;
@@ -84,6 +89,7 @@ void sendRentalRequest(const std::string& renterUsername, int motorbikeID, const
 
     rentalRequests.push_back(request);
 }
+
 void updateProductStatus(const std::string& motorbikeID, const std::string& newStatus) {
     std::ifstream inputFile("ProductDetail.txt");
     if (!inputFile) {
