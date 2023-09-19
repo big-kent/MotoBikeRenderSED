@@ -42,14 +42,14 @@ std::vector<std::pair<std::string, std::pair<int, int>>> userAccounts;
 std::vector<std::pair<std::string, int>> rentedMotorbikes;
 
 // Function to display motorbike data
-void displayMotorbikeData(const std::vector<Motorbike>& motorbikes, const std::string& desiredCity, int userScore) {
+void displayMotorbikeData(const std::vector<Motorbike>& motorbikes, const std::string& desiredCity, int userScore, int userCredit) {
     // Display available motorbikes in the desired city
     std::cout << "The motorbikes available for " << desiredCity << " city:" << std::endl;
 
     bool found = false;
 
     for (const Motorbike& bike : motorbikes) {
-        if (bike.City == desiredCity && bike.ProductStatus == "available" && (userScore >= bike.Score || userScore == 0)) {
+        if (bike.City == desiredCity && bike.ProductStatus == "available" && (userScore >= bike.Score || userScore == 0) && userCredit > bike.Credit) {
             // Display the motorbike information
             std::cout << "MotorbikeID: " << bike.MotorbikeID << std::endl;
             std::cout << "Model: " << bike.Model << std::endl;
@@ -64,6 +64,7 @@ void displayMotorbikeData(const std::vector<Motorbike>& motorbikes, const std::s
             std::cout << "Product status: " << bike.ProductStatus << std::endl;
             std::cout << "Score: " << bike.Score << std::endl;
             std::cout << "Latest comment: " << bike.Comment << std::endl;
+            std::cout << "Credit: " << bike.Credit << std::endl;
             std::cout << "City: " << bike.City << std::endl;
             std::cout << std::endl;
             found = true;
@@ -77,8 +78,12 @@ void displayMotorbikeData(const std::vector<Motorbike>& motorbikes, const std::s
     return;
 }
 
-// Function to send a rental request message
 void sendRentalRequest(const std::string& renterUsername, int motorbikeID, const std::string& ownerUsername) {
+    if (renterUsername == ownerUsername) {
+        std::cout << "You cannot rent your own motorbike; you should rent a motorbike from others." << std::endl;
+        return; // Exit the function, as the user cannot rent their own motorbike.
+    }
+
     std::cout << "Sending rental request to the motorbike owner..." << std::endl;
     std::cout << "Request Message: " << renterUsername << " wants to rent your motorbike (ID: " << motorbikeID << ")." << std::endl;
     std::cout << "Sent to owner: " << ownerUsername << std::endl;
@@ -92,6 +97,7 @@ void sendRentalRequest(const std::string& renterUsername, int motorbikeID, const
 
     rentalRequests.push_back(request);
 }
+
 
 void updateProductStatus(const std::string& motorbikeID, const std::string& newStatus) {
     std::ifstream inputFile("ProductDetail.txt");
@@ -147,6 +153,30 @@ void updateProductStatus(const std::string& motorbikeID, const std::string& newS
     }
 }
 
+// Function to view rental request responses for renters
+void viewRenterResponses(const std::string& renterUsername) {
+    // Initialize a flag to check if there are responses for the renter
+    bool hasResponses = false;
+
+    // Iterate through rentalRequests to find responses for the renter
+    for (const RentalRequest& request : rentalRequests) {
+        if (request.renterUsername == renterUsername) {
+            if (request.status == "approved") {
+                std::cout << "Your rental request for Motorbike ID " << request.motorbikeID << " has been approved by "<< request.ownerUsername << std::endl;
+            } else if (request.status == "rejected") {
+                std::cout << "Your rental request for Motorbike ID " << request.motorbikeID << " has been rejected by "<< request.ownerUsername << std::endl;
+            }
+            hasResponses = true;
+        }
+    }
+
+    // Check if there are responses for the renter
+    if (!hasResponses) {
+        std::cout << "You do not have any rental request responses right now." << std::endl;
+    }
+}
+
+
 // Function to view rental requests and approve or reject them
 void viewRentalRequests(const std::string& ownerUsername) {
     // Open the ProductDetail.txt file to read and update motorbike information
@@ -186,9 +216,13 @@ void viewRentalRequests(const std::string& ownerUsername) {
     // Close the userAccount.txt file
     userAccountFile.close();
 
+    // Initialize a flag to check if the owner has any pending requests
+    bool hasPendingRequests = false;
+
     // Iterate through rentalRequests to find pending requests for the owner
     for (RentalRequest& request : rentalRequests) {
         if (request.ownerUsername == ownerUsername && request.status == "pending") {
+            hasPendingRequests = true; // Set the flag to true
             std::cout << "From: " << request.renterUsername << " (Motorbike ID: " << request.motorbikeID << ")" << std::endl;
 
             // Prompt owner for approval
@@ -253,6 +287,11 @@ void viewRentalRequests(const std::string& ownerUsername) {
         }
     }
 
+    // Check if the owner has any pending requests
+    if (!hasPendingRequests) {
+        std::cout << "You do not have any rental requests right now." << std::endl;
+    }
+
     // Write the updated user account details back to userAccount.txt
     std::ofstream updatedUserAccountFile("userAccount.txt");
     if (updatedUserAccountFile.is_open()) {
@@ -264,6 +303,7 @@ void viewRentalRequests(const std::string& ownerUsername) {
         std::cerr << "Unable to open userAccount.txt for writing." << std::endl;
     }
 }
+
 
 // Function to check if a user has already rented a motorbike
 bool hasUserRented(const std::string& username) {
@@ -330,6 +370,8 @@ void rentMotorbike(const std::string& username) {
             sscanf(line.c_str(), "Score: %d", &currentMotorbike.Score);
         } else if (line.find("Latest comment: ") != std::string::npos) {
             currentMotorbike.Comment = line.substr(16);
+        } else if (line.find("Credit: ") != std::string::npos) {
+            sscanf(line.c_str(), "Credit: %d", &currentMotorbike.Credit);
         } else if (line.find("City: ") != std::string::npos) {
             currentMotorbike.City = line.substr(6);
         }
@@ -393,7 +435,7 @@ std::cout << "User: " << username << ", Credit: " << userCredit << ", Score: " <
     std::getline(std::cin, desiredCity);
 
     // Call the function to display motorbike data with the user's score
-    displayMotorbikeData(motorbikes, desiredCity, userScore);
+    displayMotorbikeData(motorbikes, desiredCity, userScore, userCredit);
 
     // Ask the user to enter the ID of the motorbike they want to rent
     int motorbikeID;
@@ -404,7 +446,7 @@ std::cout << "User: " << username << ", Credit: " << userCredit << ", Score: " <
     bool motorbikeFound = false;
 
     for (Motorbike& bike : motorbikes) {
-        if (bike.MotorbikeID == motorbikeID && bike.City == desiredCity && bike.ProductStatus == "available" && (userScore >= bike.Score || userScore == 0)) {
+        if (bike.MotorbikeID == motorbikeID && bike.City == desiredCity && bike.ProductStatus == "available" && (userScore >= bike.Score || userScore == 0) && userCredit > bike.Credit) {
             motorbikeFound = true;
 
             // Prompt the user to confirm the rental
@@ -433,7 +475,230 @@ std::cout << "User: " << username << ", Credit: " << userCredit << ", Score: " <
     }
 
     if (!motorbikeFound) {
-        std::cout << "Motorbike not available or your score is not sufficient for this motorbike." << std::endl;
+        std::cout << "Motorbike not available or your score, credit is not sufficient for this motorbike." << std::endl;
+        std::cout << "Please try to type the right city name or check your score and credit again !!!" << std::endl;
+    }
+}
+
+// Function to check if a motorbike ID already exists
+bool motorbikeIdExists(const std::string& motorbikeId) {
+    // Open the file for reading
+    std::ifstream inputFile("ProductDetail.txt");
+
+    if (!inputFile.is_open()) {
+        std::cerr << "Error: Unable to open the input file." << std::endl;
+        return false; // Return false to indicate an error
+    }
+
+    std::string line;
+    while (std::getline(inputFile, line)) {
+        // Search for lines that contain "MotorbikeID:" and compare the ID
+        if (line.find("MotorbikeID: ") != std::string::npos) {
+            std::string existingId = line.substr(13); // Extract the ID from the line
+            if (existingId == motorbikeId) {
+                inputFile.close(); // Close the file
+                return true; // ID exists in the file
+            }
+        }
+    }
+
+    inputFile.close(); // Close the file
+    return false; // ID not found in the file
+}
+
+// Function to rent a motorbike
+void applyMotorbikeForRent(const std::string& username) {
+    std::ofstream productFile("ProductDetail.txt", std::ios::app); // Append mode
+
+    if (productFile.is_open()) {
+        std::cout << "\nAdd New Motorbike:" << std::endl;
+
+        std::string motorbikeId;
+        std::cout << "MotorbikeID: ";
+        std::cin >> motorbikeId;
+
+        // Check if the motorbike ID already exists (you may need to modify this check)
+        if (motorbikeIdExists(motorbikeId)) {
+            std::cout << "MotorbikeID already exists. Please choose a unique ID." << std::endl;
+            return;
+        }
+
+        // Input the rest of the motorbike details
+        std::string model, color, engineSize, transmissionMode, yearMade, description, rentedRate, rateId, Comment,Credit, City;
+
+        std::cin.ignore(); // Clear the newline left in the buffer
+
+        std::cout << "Model: ";
+        std::getline(std::cin, model);
+
+        std::cout << "Color: ";
+        std::getline(std::cin, color);
+
+        std::cout << "Engine Size: ";
+        std::getline(std::cin, engineSize);
+
+        std::cout << "Transmission Mode (Automatic, Manual, Electronic): ";
+        std::getline(std::cin, transmissionMode);
+
+        std::cout << "Year Made: ";
+        std::getline(std::cin, yearMade);
+
+        std::cout << "Description: ";
+        std::getline(std::cin, description);
+
+        // Set the owner username to be the same as the applying user's username
+        std::string ownerUsername = username;
+
+        std::cout << "Expected Rented Rate: ";
+        std::getline(std::cin, rentedRate);
+
+        std::cout << "Rate ID: ";
+        std::getline(std::cin, rateId);
+
+        std::cout << "Latest comment: ";
+        std::getline(std::cin, Comment);
+
+        std::cout << "Credit needed for renting: ";
+        std::getline(std::cin, Credit);
+
+        std::cout << "City: ";
+        std::getline(std::cin, City);
+
+        // Write a blank line before writing the new motorbike details to the file
+        productFile << "\n";
+
+        // Write the new motorbike details to the file
+        productFile << "MotorbikeID: " << motorbikeId << std::endl;
+        productFile << "Model: " << model << std::endl;
+        productFile << "Color: " << color << std::endl;
+        productFile << "Engine Size: " << engineSize << std::endl;
+        productFile << "Transmission Mode: " << transmissionMode << std::endl;
+        productFile << "Year Made: " << yearMade << std::endl;
+        productFile << "Description: " << description << std::endl;
+        productFile << "Owner username: " << ownerUsername << std::endl;
+        productFile << "Expected Rented Rate: " << rentedRate << std::endl;
+        productFile << "Rate ID: " << rateId << std::endl;
+        productFile << "Product status: available" << std::endl;
+        productFile << "Score: " << 0 << std::endl;
+        productFile << "Latest comment: " << Comment << std::endl;
+        productFile << "Credit: " << Credit << std::endl;
+        productFile << "City: " << City << std::endl;
+
+        productFile.close();
+        std::cout << "New motorbike added successfully." << std::endl;
+    } else {
+        std::cerr << "Failed to open product details file." << std::endl;
+    }
+}
+
+// Function to add more credit points to a user's account with credit milestones
+void addMoreCreditPointsToYourAccount(const std::string& username) {
+    // Define the exchange rate: 1 credit = $1
+    const int creditToDollarExchangeRate = 1;
+
+    // Open the userAccount.txt file to read user account data
+    std::ifstream userAccountFile("userAccount.txt");
+    if (!userAccountFile.is_open()) {
+        std::cerr << "Unable to open userAccount.txt." << std::endl;
+        return;
+    }
+
+    // Temporary storage for user account details
+    std::vector<std::string> userAccountDetails;
+
+    // Read and store user account details
+    std::string line;
+    while (std::getline(userAccountFile, line)) {
+        userAccountDetails.push_back(line);
+    }
+
+    // Close the userAccount.txt file
+    userAccountFile.close();
+
+    // Find the user's account by searching for their username
+    int userIndex = -1;
+    for (size_t i = 0; i < userAccountDetails.size(); ++i) {
+        if (userAccountDetails[i].find(username) != std::string::npos) {
+            userIndex = static_cast<int>(i);
+            break;
+        }
+    }
+
+    // Check if the user was found
+    if (userIndex == -1) {
+        std::cout << "User not found." << std::endl;
+        return;
+    }
+
+    // Extract and display the user's current credit
+    std::istringstream iss(userAccountDetails[userIndex]);
+    std::string usernameFromFile, password;
+    int currentCredit, score;
+    iss >> usernameFromFile >> password >> currentCredit >> score;
+
+    std::cout << "User:" << username << ", your current credits: " << currentCredit << " credits\n" << std::endl;
+
+    // Define credit milestones with their equivalent dollar values
+    std::vector<std::pair<int, int>> creditMilestones = {{5, 5}, {10, 10}, {20, 20}, {50, 50}, {100, 100}}; // Add more milestones as needed
+
+    // Display available credit options to the user
+    std::cout << "Available credit options:" << std::endl;
+    for (size_t i = 0; i < creditMilestones.size(); ++i) {
+        std::cout << i + 1 << ". " << creditMilestones[i].first << " credits = $" << creditMilestones[i].second << std::endl;
+    }
+
+    // Prompt the user to select a credit milestone
+    int choice;
+    do {
+        std::cout << "\nEnter the number corresponding to your chosen credit milestone: ";
+        if (!(std::cin >> choice) || choice < 1 || choice > static_cast<int>(creditMilestones.size())) {
+            std::cout << "Invalid input. Please select a valid option." << std::endl;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+    } while (choice < 1 || choice > static_cast<int>(creditMilestones.size()));
+
+    // Get the selected credit and dollar values
+    int creditsToAdd = creditMilestones[choice - 1].first;
+    int dollarsToAdd = creditMilestones[choice - 1].second;
+
+    // Display payment method options
+    std::cout << "\nSelect a payment method:" << std::endl;
+    std::cout << "1. Cash" << std::endl;
+    std::cout << "2. Credit card" << std::endl;
+    std::cout << "3. Bank check" << std::endl;
+    std::cout << "4. Internet banking" << std::endl;
+
+    int paymentMethodChoice;
+    do {
+        std::cout << "\nEnter the number corresponding to your chosen payment method: ";
+        if (!(std::cin >> paymentMethodChoice) || paymentMethodChoice < 1 || paymentMethodChoice > 4) {
+            std::cout << "Invalid input. Please select a valid payment method." << std::endl;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+    } while (paymentMethodChoice < 1 || paymentMethodChoice > 4);
+
+    // Process the selected payment method (you can add logic here to handle each method)
+
+    // Update the user's credit
+    currentCredit += creditsToAdd;
+
+    // Update user credit in userAccountDetails vector
+    std::ostringstream oss;
+    oss << usernameFromFile << " " << password << " " << currentCredit << " " << score;
+    userAccountDetails[userIndex] = oss.str();
+
+    // Write the updated user account details back to userAccount.txt
+    std::ofstream updatedUserAccountFile("userAccount.txt");
+    if (updatedUserAccountFile.is_open()) {
+        for (const auto& detail : userAccountDetails) {
+            updatedUserAccountFile << detail << "\n";
+        }
+        updatedUserAccountFile.close();
+        std::cout << "Credits added successfully. Your new credit balance is: " << currentCredit << " credits ($" << dollarsToAdd << ")." << std::endl;
+    } else {
+        std::cerr << "Unable to open userAccount.txt for writing." << std::endl;
     }
 }
 

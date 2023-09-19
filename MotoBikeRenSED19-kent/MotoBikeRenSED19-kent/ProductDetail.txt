@@ -72,7 +72,7 @@ Description: versatile and reliable
 Owner username: khanh
 Expected Rented Rate: 8%
 Rate ID: 23457
-Product status: available
+Product status: unavailable
 Score: 8
 Latest comment: great for daily use
 Credit: 6
@@ -93,3 +93,19 @@ Score: 7
 Latest comment: ideal for city traffic
 Credit: 5
 City: Ho Chi Minh
+
+MotorbikeID: 3863969
+Model: Z1000
+Color: black and red
+Engine Size: 950
+Transmission Mode: Electronic
+Year Made: 2023
+Description: Super fast
+Owner username: khanh
+Expected Rented Rate: 8%
+Rate ID: 103203
+Product status: available
+Score: 0
+Latest comment: Good for racing
+Credit: 25
+City: Ha Noi

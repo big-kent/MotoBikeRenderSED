@@ -5,7 +5,7 @@
 #include "ProductDetails.h"
 #include "UserUI.h"
 #include "searchEngine.h"
-#include "rental_system.h" //anh thêm cái này nữa nha cùng lần sửa với 2 cái ở rental_system.h
+#include "rental_system.h"
 #include <limits> // Include this header for numeric_limits
 
 using namespace std;

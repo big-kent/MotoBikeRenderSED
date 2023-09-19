@@ -18,16 +18,19 @@ public:
             std::cout << "\nMember Menu for " << username << ":" << std::endl;
             std::cout << "1. Edit User Profile" << std::endl;
             std::cout << "2. Search Motorbikes by City" << std::endl;
-            std::cout << "3. Rent a Motorbike" << std::endl;
-            std::cout << "4. View Rental Requests" << std::endl;
-            std::cout << "5. Exit" << std::endl;
-            std::cout << "Enter your choice (1-4): ";
+            std::cout << "3. Apply a new motorbike for rental service" << std::endl;
+            std::cout << "4. Rent a Motorbike" << std::endl;
+            std::cout << "5. View Rental Requests" << std::endl;
+            std::cout << "6. View Rental responses" << std::endl;
+            std::cout << "7. Add more credit point to your account" << std::endl;
+            std::cout << "8. Exit" << std::endl;
+            std::cout << "Enter your choice (1-8): ";
 
-            if (!(std::cin >> choice) || choice < 1 || choice > 5) {
-                // Input is not a valid integer in the range (1-5)
+            if (!(std::cin >> choice) || choice < 1 || choice > 8) {
+                // Input is not a valid integer in the range (1-6)
                 std::cin.clear(); // Clear error flags
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear the input buffer
-                std::cout << "Invalid input. Please enter a valid integer choice (1-5).\n" << std::endl;
+                std::cout << "Invalid input. Please enter a valid integer choice (1-8).\n" << std::endl;
                 continue; // Skip the rest of the loop iteration and ask for input again
             }
 
@@ -39,13 +42,22 @@ public:
                     SearchEngine::searchMotorbikesByCity();
                     break;
                 case 3:
-                    rentMotorbike(username);
+                    applyMotorbikeForRent(username);
                     break;
                 case 4:
-                    viewRentalRequests(username);
+                    rentMotorbike(username);
                     break;
                 case 5:
-                    std::cout << "Exiting the User Menu. Goodbye!\n" << std::endl;
+                    viewRentalRequests(username);
+                    break;
+                case 6:
+                    viewRenterResponses(username);
+                    break;
+                case 7:
+                    addMoreCreditPointsToYourAccount(username);
+                    break;              
+                case 8:
+                    std::cout << "\nExiting " << username << "'s Menu. Goodbye!!!\n" << std::endl;
                     return;
                 default:
                     break;
