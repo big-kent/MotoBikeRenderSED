@@ -36,6 +36,11 @@ struct RentalRequest {
 // Create a vector to store rental requests
 std::vector<RentalRequest> rentalRequests;
 
+std::vector<std::pair<std::string, std::pair<int, int>>> userAccounts;
+
+// Define a global vector to keep track of rented motorbikes and their respective usernames
+std::vector<std::pair<std::string, int>> rentedMotorbikes;
+
 // Function to display motorbike data
 void displayMotorbikeData(const std::vector<Motorbike>& motorbikes, const std::string& desiredCity, int userScore) {
     // Display available motorbikes in the desired city
@@ -260,11 +265,25 @@ void viewRentalRequests(const std::string& ownerUsername) {
     }
 }
 
-
-
+// Function to check if a user has already rented a motorbike
+bool hasUserRented(const std::string& username) {
+    for (const auto& rental : rentedMotorbikes) {
+        if (rental.first == username) {
+            return true; // User has already rented a motorbike
+        }
+    }
+    return false; // User has not rented any motorbike
+}
 
 // Function to rent a motorbike
 void rentMotorbike(const std::string& username) {
+
+    // Check if the user has already rented a motorbike
+    if (hasUserRented(username)) {
+        std::cout << "You have already rented a motorbike. You cannot rent another one." << std::endl;
+        return;
+    }
+
     // Open the file by name (without specifying a directory)
     std::ifstream inputFile("ProductDetail.txt");
 
@@ -331,8 +350,6 @@ void rentMotorbike(const std::string& username) {
         std::cerr << "Error: Unable to open the user account file." << std::endl;
         return;
     }
-
-std::vector<std::pair<std::string, std::pair<int, int>>> userAccounts;
 
 // Read user account data and populate the vector
 std::string userLine;
@@ -407,6 +424,7 @@ std::cout << "User: " << username << ", Credit: " << userCredit << ", Score: " <
 
                 // Call the function to send the rental request
                 sendRentalRequest(username, motorbikeID, ownerUsername);
+                rentedMotorbikes.push_back(std::make_pair(username, motorbikeID));
             } else {
                 std::cout << "Rental canceled." << std::endl;
             }
