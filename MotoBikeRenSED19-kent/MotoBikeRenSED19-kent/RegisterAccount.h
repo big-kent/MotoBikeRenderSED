@@ -32,12 +32,13 @@ public:
             if (userFile.is_open() && userProfileFile.is_open()) {
                 int initialCredit = 20;
                 float defaultScore = 0;
+                float defaultRatingTime = 0;
                 // Simulate the payment process based on the selected payment method
                 bool paymentSuccessful = processPayment(paymentMethod);
 
                 if (paymentSuccessful) {
                     // Write the new username, password, and initial credit points to the userAccount file
-                    userFile << username << " " << password << " " << initialCredit  << " "  << defaultScore<< "\n";
+                    userFile << username << " " << password << " " << initialCredit  << " "  << defaultScore<< " " << defaultRatingTime <<"\n";
                     userFile.close();
 
                     // Write user profile information to the userProfile file
@@ -53,6 +54,7 @@ public:
                     userProfileFile.close();
 
                     std::cout << "Registration successful. You have " << initialCredit << " credit points and your default score of rating is: " << defaultScore << std::endl;
+                    std::cout << "your default rating time is: " << defaultRatingTime << std::endl;
                     return true; // Registration successful
                 } else {
                     std::cout << "Payment failed. Registration canceled." << std::endl;
