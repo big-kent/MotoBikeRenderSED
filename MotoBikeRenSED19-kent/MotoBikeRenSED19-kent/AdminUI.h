@@ -211,10 +211,10 @@ private:
                 std::getline(std::cin, newScore);
                 lines[i + 11] = "Score " + newScore;
 
-                std::cout << "Comment: ";
+                std::cout << "Latest comment: ";
                 std::string newComment;
                 std::getline(std::cin, newComment);
-                lines[i + 12] = "Comment: " + newComment;
+                lines[i + 12] = "Latest comment: " + newComment;
                 
                 std::cout << "city: ";
                 std::string newCity;
@@ -248,7 +248,7 @@ private:
         }
     }
 
-        static void AddNewMotorbike() {
+    static void AddNewMotorbike() {
         std::ofstream productFile("ProductDetail.txt", std::ios::app); // Append mode
 
         if (productFile.is_open()) {
@@ -302,7 +302,7 @@ private:
             std::cout << "Score: ";
             std::getline(std::cin, Score);
 
-            std::cout << "Comment: ";
+            std::cout << "Latest comment: ";
             std::getline(std::cin, Comment);
 
             std::cout << "City: ";
@@ -321,7 +321,7 @@ private:
             productFile << "Rate ID: " << rateId << std::endl;
             productFile << "Product status: " << productStatus << std::endl;
             productFile << "Score: " << Score << std::endl;
-            productFile << "Comment: " << Comment << std::endl;
+            productFile << "Latest comment: " << Comment << std::endl;
             productFile << "City: " << City << std::endl;
 
             productFile.close();

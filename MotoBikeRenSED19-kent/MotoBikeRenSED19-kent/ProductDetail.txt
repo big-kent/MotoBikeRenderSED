@@ -10,7 +10,7 @@ Expected Rented Rate: 10%
 Rate ID: 12345
 Product status: available
 Score: 8
-Comment: good vehicle
+Latest comment: good vehicle
 Credit: 5
 City: Ho Chi Minh
 
@@ -26,7 +26,7 @@ Expected Rented Rate: 8%
 Rate ID: 65432
 Product status: available
 Score: 8
-Comment: good vehicle
+Latest comment: good vehicle
 Credit: 5
 City: Ho Chi Minh
 
@@ -40,9 +40,9 @@ Description: fast
 Owner username: kent
 Expected Rented Rate: 6%
 Rate ID: 98745
-Product status: unavailable
+Product status: available
 Score: 8
-Comment: good vehicle
+Latest comment: good vehicle
 Credit: 10
 City: Ho Chi Minh
 
@@ -58,7 +58,7 @@ Expected Rented Rate: 7%
 Rate ID: 78902
 Product status: available
 Score: 7
-Comment: perfect for city commuting
+Latest comment: perfect for city commuting
 Credit: 4
 City: Ha Noi
 
@@ -74,7 +74,7 @@ Expected Rented Rate: 8%
 Rate ID: 23457
 Product status: available
 Score: 8
-Comment: great for daily use
+Latest comment: great for daily use
 Credit: 6
 City: Ha Noi
 
@@ -90,22 +90,6 @@ Expected Rented Rate: 6%
 Rate ID: 54322
 Product status: available
 Score: 7
-Comment: ideal for city traffic
+Latest comment: ideal for city traffic
 Credit: 5
-City: Ho Chi Minh
-
-MotorbikeID: 98765
-Model: Yamaha
-Color: red
-Engine Size: 300
-Transmission Mode: Manual
-Year Made: 2022
-Description: agile and fun to ride
-Owner username: khanh
-Expected Rented Rate: 9%
-Rate ID: 98766
-Product status: unavailable
-Score: 8
-Comment: great for urban exploration
-Credit: 7
 City: Ho Chi Minh

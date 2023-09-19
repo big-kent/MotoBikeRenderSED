@@ -80,8 +80,8 @@ public:
                 currentMotorbike.ProductStatus = line.substr(16);
             } else if (line.find("Score: ") != std::string::npos) {
                 sscanf(line.c_str(), "Score: %d", &currentMotorbike.Score);
-            } else if (line.find("Comment: ") != std::string::npos) {
-                currentMotorbike.Comment = line.substr(9);
+            } else if (line.find("Latest comment: ") != std::string::npos) {
+                currentMotorbike.Comment = line.substr(16);
             } else if (line.find("City: ") != std::string::npos) {
                 currentMotorbike.City = line.substr(6);
             }
@@ -115,7 +115,7 @@ public:
                 std::cout << "Rate ID: " << bike.RateID << std::endl;
                 std::cout << "Product status: " << bike.ProductStatus << std::endl;
                 std::cout << "Score: " << bike.Score << std::endl;
-                std::cout << "Comment: " << bike.Comment << std::endl;
+                std::cout << "Latest comment: " << bike.Comment << std::endl;
                 std::cout << "City: " << bike.City << std::endl;
                 std::cout << std::endl;
                 found = true;
