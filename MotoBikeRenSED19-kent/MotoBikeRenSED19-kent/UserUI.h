@@ -16,7 +16,7 @@ public:
 
         while (true) {
             std::cout << "\nMember Menu for " << username << ":" << std::endl;
-            std::cout << "1. Edit User Profile" << std::endl;
+            std::cout << "1. Edit My Profile" << std::endl;
             std::cout << "2. Search Motorbikes by City" << std::endl;
             std::cout << "3. Apply a new motorbike for rental service" << std::endl;
             std::cout << "4. Rent a Motorbike" << std::endl;
