@@ -100,6 +100,7 @@ void sendRentalRequest(const std::string& renterUsername, int motorbikeID, const
 }
 
 
+
 void updateProductStatus(const std::string& motorbikeID, const std::string& newStatus) {
     std::ifstream inputFile("ProductDetail.txt");
     if (!inputFile) {
@@ -321,12 +322,20 @@ bool hasUserRented(const std::string& username) {
 // Function to rent a motorbike
 void rentMotorbike(const std::string& username) {
 
-    // Check if the user has already rented a motorbike
-    if (hasUserRented(username)) {
-        std::cout << "You have already rented a motorbike. You cannot rent another one." << std::endl;
-        return;
+    // Check if the user is trying to rent their own motorbike
+    bool isRentingOwnMotorbike = false;
+
+    for (const auto& request : rentalRequests) {
+        if (request.renterUsername == username && request.status == "pending") {
+            isRentingOwnMotorbike = true;
+            break;
+        }
     }
 
+    if (isRentingOwnMotorbike) {
+        std::cout << "You have already attempted to rent your own motorbike, or a rental request is pending." << std::endl;
+        return;
+    }
     // Open the file by name (without specifying a directory)
     std::ifstream inputFile("ProductDetail.txt");
 
