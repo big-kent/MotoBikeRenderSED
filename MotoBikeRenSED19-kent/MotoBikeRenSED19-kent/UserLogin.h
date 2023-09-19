@@ -3,21 +3,35 @@
 #ifndef USERLOGIN_H
 #define USERLOGIN_H
 
-#include <string>
+#include <iostream>
 #include <fstream>
+#include <sstream>
+#include <string>
 
 class UserLogin {
 public:
+    struct UserInfo {
+        std::string username;
+        std::string password;
+        int credit;
+        int score;
+        int rating_time;
+    };
+
     static bool isUserLoginValid(const std::string& username, const std::string& password) {
         std::ifstream userFile("userAccount.txt");
-        std::string userUsername;
-        std::string userPassword;
+        std::string line;
 
         if (userFile.is_open()) {
-            while (userFile >> userUsername >> userPassword) {
-                if (username == userUsername && password == userPassword) {
-                    userFile.close();
-                    return true; // User login is valid
+            while (std::getline(userFile, line)) {
+                std::istringstream iss(line);
+                UserInfo userInfo;
+
+                if (iss >> userInfo.username >> userInfo.password >> userInfo.credit >> userInfo.score >> userInfo.rating_time) {
+                    if (username == userInfo.username && password == userInfo.password) {
+                        userFile.close();
+                        return true; // User login is valid
+                    }
                 }
             }
             userFile.close();

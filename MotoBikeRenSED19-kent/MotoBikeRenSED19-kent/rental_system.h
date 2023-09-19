@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <limits>
 
 // Define a struct to represent a motorbike
 struct Motorbike {
@@ -260,7 +261,9 @@ void viewRentalRequests(const std::string& ownerUsername) {
                         std::istringstream iss(userAccountDetails[i]);
                         std::string dummy, username, password;
                         int userCredit;
-                        iss >> username >> password >> userCredit;
+                        int userScore;
+                        int userRatingTime;
+                        iss >> username >> password >> userCredit >> userScore >> userRatingTime;
 
                         // Check if the user has enough credit to rent the motorbike
                         if (userCredit >= motorbikeCredit) {
@@ -269,7 +272,7 @@ void viewRentalRequests(const std::string& ownerUsername) {
 
                             // Update user credit in userAccountDetails vector
                             std::ostringstream oss;
-                            oss << username << " " << password << " " << userCredit << " 8";
+                            oss << username << " " << password << " " << userCredit << " " << userScore << " " << userRatingTime;
                             userAccountDetails[i] = oss.str();
 
                             std::cout << "Motorbike rented successfully. Credits updated." << std::endl;
