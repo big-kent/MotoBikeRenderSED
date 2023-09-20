@@ -76,7 +76,7 @@ Description: versatile and reliable
 Owner username: khanh
 Expected Rented Rate: 8%
 Rate ID: 23457
-Product status: unavailable
+Product status: available
 Score: 8
 Latest comment: great for daily use
 Credit: 6

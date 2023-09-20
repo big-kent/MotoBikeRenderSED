@@ -7,6 +7,7 @@
 #include <iostream>
 #include <sstream>
 #include <limits>
+#include <map>
 
 // Define a struct to represent a motorbike
 struct Motorbike {
@@ -34,6 +35,13 @@ struct RentalRequest {
     std::string status; // e.g., "pending", "accepted", "rejected"
 };
 
+// Define a struct for a return message
+struct ReturnMessage {
+    std::string ownerUsername;
+    int motorbikeID;
+    std::string renterUsername;
+};
+
 // Create a vector to store rental requests
 std::vector<RentalRequest> rentalRequests;
 
@@ -41,6 +49,9 @@ std::vector<std::pair<std::string, std::pair<int, int>>> userAccounts;
 
 // Define a global vector to keep track of rented motorbikes and their respective usernames
 std::vector<std::pair<std::string, int>> rentedMotorbikes;
+
+// Use a map to associate owners with their return messages
+std::map<std::string, std::vector<ReturnMessage>> ownerReturnMessages;
 
 // Function to display motorbike data
 void displayMotorbikeData(const std::vector<Motorbike>& motorbikes, const std::string& desiredCity, int userScore, int userCredit) {
@@ -98,8 +109,6 @@ void sendRentalRequest(const std::string& renterUsername, int motorbikeID, const
 
     rentalRequests.push_back(request);
 }
-
-
 
 void updateProductStatus(const std::string& motorbikeID, const std::string& newStatus) {
     std::ifstream inputFile("ProductDetail.txt");
@@ -283,6 +292,29 @@ void viewRentalRequests(const std::string& ownerUsername) {
                         break;
                     }
                 }
+
+                // Find the owner in userAccount.txt and update their credit
+                for (size_t i = 0; i < userAccountDetails.size(); ++i) {
+                    if (userAccountDetails[i].find(ownerUsername) != std::string::npos) {
+                        std::istringstream iss(userAccountDetails[i]);
+                        std::string dummy, username, password;
+                        int userCredit;
+                        int userScore;
+                        int userRatingTime;
+                        iss >> username >> password >> userCredit >> userScore >> userRatingTime;
+
+                        // Add the motorbike credit (price) to the owner's credit
+                        userCredit += motorbikeCredit;
+
+                        // Update owner credit in userAccountDetails vector
+                        std::ostringstream oss;
+                        oss << username << " " << password << " " << userCredit << " " << userScore << " " << userRatingTime;
+                        userAccountDetails[i] = oss.str();
+
+                        std::cout << "Owner's credit updated." << std::endl;
+                        break;
+                    }
+                }
             } else {
                 // Mark the request as rejected
                 request.status = "rejected";
@@ -405,39 +437,39 @@ void rentMotorbike(const std::string& username) {
         return;
     }
 
-// Read user account data and populate the vector
-std::string userLine;
-while (std::getline(userAccountFile, userLine)) {
-    std::istringstream userStream(userLine);
-    std::string username, password;
-    int credit, score;
+    // Read user account data and populate the vector
+    std::string userLine;
+    while (std::getline(userAccountFile, userLine)) {
+        std::istringstream userStream(userLine);
+        std::string username, password;
+        int credit, score;
 
-    userStream >> username >> password >> credit >> score;
+        userStream >> username >> password >> credit >> score;
 
-    userAccounts.push_back(std::make_pair(username, std::make_pair(credit, score)));
-}
-
-// Check if the provided username exists in the userAccounts vector
-bool userFound = false;
-std::pair<int, int> userData; // Credit and Score
-
-for (const auto& userAccount : userAccounts) {
-    if (userAccount.first == username) {
-        userFound = true;
-        userData = userAccount.second; // Extract credit and score
-        break;
+        userAccounts.push_back(std::make_pair(username, std::make_pair(credit, score)));
     }
-}
 
-if (!userFound) {
-    std::cout << "User '" << username << "' not found." << std::endl;
-    return;
-}
+    // Check if the provided username exists in the userAccounts vector
+    bool userFound = false;
+    std::pair<int, int> userData; // Credit and Score
 
-// Display the user's credit and score on the same line
-int userCredit = userData.first;
-int userScore = userData.second;
-std::cout << "User: " << username << ", Credit: " << userCredit << ", Score: " << userScore <<"\n"<<std::endl;
+    for (const auto& userAccount : userAccounts) {
+        if (userAccount.first == username) {
+            userFound = true;
+            userData = userAccount.second; // Extract credit and score
+            break;
+        }
+    }
+
+    if (!userFound) {
+        std::cout << "User '" << username << "' not found." << std::endl;
+        return;
+    }
+
+    // Display the user's credit and score on the same line
+    int userCredit = userData.first;
+    int userScore = userData.second;
+    std::cout << "User: " << username << ", Credit: " << userCredit << ", Score: " << userScore <<"\n"<<std::endl;
 
 
     // Prompt the user for the desired city
@@ -712,6 +744,59 @@ void addMoreCreditPointsToYourAccount(const std::string& username) {
     } else {
         std::cerr << "Unable to open userAccount.txt for writing." << std::endl;
     }
+}
+
+// Function to send a return message
+void sendReturnMessage(const std::string& ownerUsername, int motorbikeID, const std::string& renterUsername) {
+    // Create a return message
+    ReturnMessage message = { ownerUsername, motorbikeID, renterUsername };
+
+    // Store the message in the ownerReturnMessages map
+    ownerReturnMessages[ownerUsername].push_back(message);
+}
+
+// Function to check return messages for the owner
+void checkReturnMessages(const std::string& ownerUsername) {
+    // Check if the owner has any return messages
+    if (ownerReturnMessages.find(ownerUsername) != ownerReturnMessages.end()) {
+        // Iterate through the owner's return messages
+        for (const ReturnMessage& message : ownerReturnMessages[ownerUsername]) {
+            std::cout << "Return Message: Motorbike with ID " << message.motorbikeID
+                      << " has been returned by " << message.renterUsername << "." << std::endl;
+        }
+    } else {
+        std::cout << "No return messages for user " << ownerUsername << "." << std::endl;
+    }
+}
+
+// Return the motorbike to the owner
+void returnMotorbike(const std::string& renterUsername) {
+    int motorbikeID = -1; // Initialize to an invalid value
+    std::string ownerUsername = ""; // Initialize owner's username
+
+    // Iterate through rentalRequests to find the motorbikeID rented by the specified renterUsername
+    for (RentalRequest& request : rentalRequests) {
+        if (request.renterUsername == renterUsername && request.status == "approved") {
+            motorbikeID = request.motorbikeID;
+            ownerUsername = request.ownerUsername; // Assuming you have the owner's username in the request
+            // Update the request status to "returned" or remove it from the collection as needed
+            request.status = "returned"; // You can mark the request as returned
+            break;
+        }
+    }
+
+    if (motorbikeID == -1) {
+        std::cout << "No rented motorbike found for user " << renterUsername << "." << std::endl;
+        return;
+    }
+
+    // Update the Product status to "available" for the returned motorbike
+    updateProductStatus(std::to_string(motorbikeID), "available");
+
+    std::cout << "Motorbike with ID " << motorbikeID << " has been returned by " << renterUsername << "." << std::endl;
+
+    // Send a return message to the owner (assuming sendReturnMessage exists)
+    sendReturnMessage(ownerUsername, motorbikeID, renterUsername);
 }
 
 #endif // RENTAL_SYSTEM_H

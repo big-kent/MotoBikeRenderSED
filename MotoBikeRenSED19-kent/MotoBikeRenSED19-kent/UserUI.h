@@ -22,15 +22,17 @@ public:
             std::cout << "4. Rent a Motorbike" << std::endl;
             std::cout << "5. View Rental Requests" << std::endl;
             std::cout << "6. View Rental responses" << std::endl;
-            std::cout << "7. Add more credit point to your account" << std::endl;
-            std::cout << "8. Exit" << std::endl;
-            std::cout << "Enter your choice (1-8): ";
+            std::cout << "7. Return the motorbike to the rental service" << std::endl;
+            std::cout << "8. Check return motorbike message from renter" << std::endl;
+            std::cout << "9. Add more credit point to your account" << std::endl;
+            std::cout << "10. Exit" << std::endl;
+            std::cout << "Enter your choice (1-10): ";
 
-            if (!(std::cin >> choice) || choice < 1 || choice > 8) {
-                // Input is not a valid integer in the range (1-6)
+            if (!(std::cin >> choice) || choice < 1 || choice > 10) {
+                // Input is not a valid integer in the range (1-10)
                 std::cin.clear(); // Clear error flags
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear the input buffer
-                std::cout << "Invalid input. Please enter a valid integer choice (1-8).\n" << std::endl;
+                std::cout << "Invalid input. Please enter a valid integer choice (1-10).\n" << std::endl;
                 continue; // Skip the rest of the loop iteration and ask for input again
             }
 
@@ -54,9 +56,15 @@ public:
                     viewRenterResponses(username);
                     break;
                 case 7:
-                    addMoreCreditPointsToYourAccount(username);
-                    break;              
+                    returnMotorbike(username);
+                    break;
                 case 8:
+                    checkReturnMessages(username);
+                    break;                 
+                case 9:
+                    addMoreCreditPointsToYourAccount(username);
+                    break;        
+                case 10:
                     std::cout << "\nExiting " << username << "'s Menu. Goodbye!!!\n" << std::endl;
                     return;
                 default:
