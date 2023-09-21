@@ -45,8 +45,8 @@ public:
                     userProfileFile << "\nUsername: " << username << "\n";
                     userProfileFile << "Full Name: " << fullName << "\n";
                     userProfileFile << "Phone: " << phone << "\n";
-                    userProfileFile << "ID Type: " << idType << "\n";
-                    userProfileFile << "ID Number: " << idNumber << "\n";
+                    userProfileFile << "ID Type (Citizen ID/Passport): " << idType << "\n";
+                    userProfileFile << "id/passport number: " << idNumber << "\n";
                     userProfileFile << "Driver's License Number: " << licenseNumber << "\n";
                     userProfileFile << "Expired Date: " << expiryDate << "\n";
                     userProfileFile << "City: " << City << "\n";

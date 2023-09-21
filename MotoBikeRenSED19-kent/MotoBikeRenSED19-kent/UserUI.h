@@ -17,18 +17,19 @@ public:
         while (true) {
             std::cout << "\nMember Menu for " << username << ":" << std::endl;
             std::cout << "1. Edit My Profile" << std::endl;
-            std::cout << "2. Search Motorbikes by City" << std::endl;
-            std::cout << "3. Apply a new motorbike for rental service" << std::endl;
-            std::cout << "4. Rent a Motorbike" << std::endl;
-            std::cout << "5. View Rental Requests" << std::endl;
-            std::cout << "6. View Rental responses" << std::endl;
-            std::cout << "7. Return the motorbike to the rental service" << std::endl;
-            std::cout << "8. Check return motorbike message from renter" << std::endl;
-            std::cout << "9. Add more credit point to your account" << std::endl;
-            std::cout << "10. Exit" << std::endl;
+            std::cout << "2. view the the motorbike's reviews" << std::endl;
+            std::cout << "3. Search Motorbikes by City" << std::endl;
+            std::cout << "4. Apply a new motorbike for rental service" << std::endl;
+            std::cout << "5. Rent a Motorbike" << std::endl;
+            std::cout << "6. View Rental Requests" << std::endl;
+            std::cout << "7. View Rental responses" << std::endl;
+            std::cout << "8. Return the motorbike to the rental service" << std::endl;
+            std::cout << "9. Check return motorbike message from renter" << std::endl;
+            std::cout << "10. Add more credit point to your account" << std::endl;
+            std::cout << "11. Exit" << std::endl;
             std::cout << "Enter your choice (1-10): ";
 
-            if (!(std::cin >> choice) || choice < 1 || choice > 10) {
+            if (!(std::cin >> choice) || choice < 1 || choice > 11) {
                 // Input is not a valid integer in the range (1-10)
                 std::cin.clear(); // Clear error flags
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear the input buffer
@@ -41,30 +42,33 @@ public:
                     editUserProfile(username);
                     break;
                 case 2:
-                    SearchEngine::searchMotorbikesByCity();
+                    displayMotorbikeScoreAndComment();
                     break;
                 case 3:
-                    applyMotorbikeForRent(username);
+                    SearchEngine::searchMotorbikesByCity();
                     break;
                 case 4:
-                    rentMotorbike(username);
+                    applyMotorbikeForRent(username);
                     break;
                 case 5:
-                    viewRentalRequests(username);
+                    rentMotorbike(username);
                     break;
                 case 6:
-                    viewRenterResponses(username);
+                    viewRentalRequests(username);
                     break;
                 case 7:
-                    returnMotorbike(username);
+                    viewRenterResponses(username);
                     break;
                 case 8:
+                    returnMotorbike(username);
+                    break;
+                case 9:
                     checkReturnMessages(username);
                     break;                 
-                case 9:
+                case 10:
                     addMoreCreditPointsToYourAccount(username);
                     break;        
-                case 10:
+                case 11:
                     std::cout << "\nExiting " << username << "'s Menu. Goodbye!!!\n" << std::endl;
                     return;
                 default:
@@ -118,16 +122,16 @@ public:
                 std::getline(std::cin, newPhone);
                 lines[i + 2] = "Phone: " + newPhone;
 
-                std::cout << "ID Type: ";
+                std::cout << "ID Type (Citizen ID/Passport): ";
                 std::string newIdType;
                 std::cin.ignore();
                 std::getline(std::cin, newIdType);
-                lines[i + 3] = "ID Type: " + newIdType;
+                lines[i + 3] = "ID Type (Citizen ID/Passport): " + newIdType;
 
-                std::cout << "ID Number: ";
+                std::cout << "id/passport number: ";
                 std::string newIdNumber;
                 std::getline(std::cin, newIdNumber);
-                lines[i + 4] = "ID Number: " + newIdNumber;
+                lines[i + 4] = "id/passport number: " + newIdNumber;
 
                 std::cout << "Driver's License Number: ";
                 std::string newDriverLicenseNum;
@@ -166,6 +170,51 @@ public:
         } else {
             std::cout << "\nPlease fill your profile first" << std::endl;
         }
+    }
+
+    static void displayMotorbikeScoreAndComment() {
+        int motorbikeID;
+
+        // Ask the user to enter the motorbike ID
+        std::cout << "Enter the MotorbikeID: ";
+        std::cin >> motorbikeID;
+
+        std::ifstream inputFile("ProductDetail.txt");
+
+        if (!inputFile) {
+            std::cerr << "Failed to open ProductDetail.txt" << std::endl;
+            return;
+        }
+
+        std::string line;
+        bool foundMotorbike = false;
+        int linesAfterID = 0;
+
+        while (std::getline(inputFile, line)) {
+            if (line.find("MotorbikeID: " + std::to_string(motorbikeID)) != std::string::npos) {
+                foundMotorbike = true;
+                std::cout << "\nReview for motorbike with ID: " << motorbikeID << std::endl;
+                continue; // Skip the line with MotorbikeID
+            }
+
+            if (foundMotorbike) {
+                linesAfterID++;
+                if (linesAfterID == 11) {
+                    // Display the score
+                    std::cout << line << std::endl;
+                } else if (linesAfterID == 12) {
+                    // Display the comment
+                    std::cout << line << std::endl;
+                    break; // Stop reading after finding the comment
+                }
+            }
+        }
+
+        if (!foundMotorbike) {
+            std::cout << "Motorbike with ID " << motorbikeID << " not found." << std::endl;
+        }
+
+        inputFile.close();
     }
 
 };

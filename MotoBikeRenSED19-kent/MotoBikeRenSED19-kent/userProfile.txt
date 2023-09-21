@@ -1,8 +1,8 @@
 Username: kent
 Full Name: Lu Minh Khang
 Phone: 0114477
-ID Type: passport
-ID Number: 123
+ID Type (Citizen ID/Passport): passport
+id/passport number: 123
 Driver's License Number: 0336699
 Expired Date: 01/27
 City: Ho Chi Minh
@@ -10,8 +10,8 @@ City: Ho Chi Minh
 Username: khanh
 Full Name: Xuan Khanh
 Phone: 0321654
-ID Type: passport
-ID Number: 0568936
+ID Type (Citizen ID/Passport): passport
+id/passport number: 0568936
 Driver's License Number: 462144321
 Expired Date: 08/28
 City: Ho Chi Minh
@@ -19,8 +19,8 @@ City: Ho Chi Minh
 Username: trinh
 Full Name: trinh
 Phone: 03659874
-ID Type: passport
-ID Number: 85633140
+ID Type (Citizen ID/Passport): passport
+id/passport number: 85633140
 Driver's License Number: 56987436
 Expired Date: 12/30
 City: Ho Chi Minh
