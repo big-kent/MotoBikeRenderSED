@@ -15,7 +15,12 @@ public:
 
         if (productFile.is_open()) {
             while (std::getline(productFile, line)) {
-                std::cout << line << std::endl;
+                // Check if the line contains any of the excluded keywords
+                if (line.find("Score:") == std::string::npos &&
+                    line.find("Latest comment:") == std::string::npos &&
+                    line.find("Rating time:") == std::string::npos) {
+                    std::cout << line << std::endl;
+                }
             }
 
             productFile.close();
@@ -24,5 +29,6 @@ public:
         }
     }
 };
+
 
 #endif // PRODUCTDETAILS_H
