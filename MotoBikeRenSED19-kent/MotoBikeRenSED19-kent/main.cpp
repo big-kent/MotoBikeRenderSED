@@ -44,14 +44,13 @@ int main() {
                     cout << "\nGuest Menu:" << endl;
                     cout << "1. Register" << endl;
                     cout << "2. View Motorbikes Available" << endl;
-                    cout << "3. Search for motorbikes by city name" << endl;
-                    cout << "4. Exit" << endl;
+                    cout << "3. Exit" << endl;
                     cout << "Enter choice: ";
                     if (!(cin >> userType)) {
                         // Input is not an integer
                         cin.clear(); // Clear error flags
                         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the input buffer
-                        cout << "Invalid input. Please enter a valid integer choice (1-4).\n" << endl;
+                        cout << "Invalid input. Please enter a valid integer choice (1-3).\n" << endl;
                         continue; // Skip the rest of the loop iteration and ask for input again
                     }
 
@@ -124,15 +123,13 @@ int main() {
                             ProductDetails::displayProductDetails(); // Call the function using the class
                             break;
                         case 3:
-                            SearchEngine::searchMotorbikesByCity();
-                            break;
-                        case 4:
                             cout << "Returning to the main menu!\n" << endl;
                             returnToMainMenu = true;
                         default:
                             break;
                     }
-                    if (returnToMainMenu|| userType == 4 ) {
+                    if (returnToMainMenu|| userType > 3 ) {
+                        cout << "Invalid input. Please enter a valid integer choice (1-3).\n" << endl;
                         break;
                     }
                 }
