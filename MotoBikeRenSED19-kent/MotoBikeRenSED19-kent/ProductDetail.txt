@@ -43,10 +43,10 @@ Owner username: kent
 Expected Rented Rate: 6%
 Rate ID: 98745
 Product status: available
-Score: 8
-Latest comment: good vehicle
+Score: 7
+Latest comment: 10
 Credit: 10
-Rating time: 1
+Rating time: 2
 City: Ho Chi Minh
 
 MotorbikeID: 78901

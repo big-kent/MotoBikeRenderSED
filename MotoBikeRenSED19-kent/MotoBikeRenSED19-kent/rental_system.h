@@ -8,6 +8,7 @@
 #include <sstream>
 #include <limits>
 #include <map>
+#include <cmath>
 
 // Define a struct to represent a motorbike
 struct Motorbike {
@@ -26,6 +27,7 @@ struct Motorbike {
     int Credit;
     std::string Comment;
     std::string City;
+    int ratingTime;
 };
 
 struct RentalRequest {
@@ -40,6 +42,14 @@ struct ReturnMessage {
     std::string ownerUsername;
     int motorbikeID;
     std::string renterUsername;
+};
+
+struct UserAccount {
+    std::string username;
+    std::string password;
+    int credit;
+    int score;
+    int ratingTime;
 };
 
 // Create a vector to store rental requests
@@ -339,7 +349,6 @@ void viewRentalRequests(const std::string& ownerUsername) {
         std::cerr << "Unable to open userAccount.txt for writing." << std::endl;
     }
 }
-
 
 // Function to check if a user has already rented a motorbike
 bool hasUserRented(const std::string& username) {
@@ -746,6 +755,189 @@ void addMoreCreditPointsToYourAccount(const std::string& username) {
     }
 }
 
+// Function to calculate the updated score for a user and return it as a rounded integer
+int calculateUpdatedScore(int currentScore, int ratingTime, double newRating) {
+    double updatedScore = (currentScore * ratingTime + newRating) / (ratingTime + 1);
+    return static_cast<int>(std::round(updatedScore)); // Round and convert to integer
+}
+
+void checkReturnMessages(const std::string& ownerUsername) {
+    // Check if the owner has any return messages
+    if (ownerReturnMessages.find(ownerUsername) != ownerReturnMessages.end()) {
+        // Iterate through the owner's return messages
+        for (const ReturnMessage& message : ownerReturnMessages[ownerUsername]) {
+            std::cout << "Return Message: Motorbike with ID " << message.motorbikeID
+                      << " has been returned by " << message.renterUsername << "." << std::endl;
+
+            // Prompt the owner to enter a rating for the motorbike renter
+            double renterRating;
+            std::cout << "Enter a rating (1 to 10) for the renter " << message.renterUsername << ": ";
+            std::cin >> renterRating;
+
+            // Ensure the renter rating is within the valid range (1 to 10)
+            if (renterRating < 1 || renterRating > 10) {
+                std::cout << "Invalid rating for the renter. Please enter a rating between 1 and 10." << std::endl;
+                continue; // Skip this message and proceed to the next one
+            }
+
+            // Update the renter's score in memory and in the userAccount.txt file
+            int currentRenterScore;
+            int currentRenterRatingTime;
+
+            // Read the current score and rating time from userAccount.txt
+            std::ifstream inFile("userAccount.txt");
+            std::ofstream outFile("temp_userAccount.txt");
+            std::string username, password;
+            int credit;
+            
+            while (inFile >> username >> password >> credit >> currentRenterScore >> currentRenterRatingTime) {
+                if (username == message.renterUsername) {
+                    // Update the user's score and rating time
+                    int updatedScore = calculateUpdatedScore(currentRenterScore, currentRenterRatingTime, renterRating);
+                    outFile << username << " " << password << " " << credit << " " << updatedScore << " " << (currentRenterRatingTime + 1) << std::endl;
+                } else {
+                    // Write other users' information as is
+                    outFile << username << " " << password << " " << credit << " " << currentRenterScore << " " << currentRenterRatingTime << std::endl;
+                }
+            }
+
+            inFile.close();
+            outFile.close();
+
+            // Replace the original userAccount.txt with the updated temp_userAccount.txt
+            std::remove("userAccount.txt");
+            std::rename("temp_userAccount.txt", "userAccount.txt");
+        }
+    } else {
+        std::cout << "No return messages for user " << ownerUsername << "." << std::endl;
+    }
+}
+
+// Function to update the userAccount.txt file with the new owner's rounded score
+void updateOwnerScoreInFile(const std::string& ownerUsername, double newScore) {
+    // Read the userAccount.txt file into memory
+    std::ifstream inputFile("userAccount.txt");
+    std::vector<std::string> lines;
+    std::string line;
+
+    while (std::getline(inputFile, line)) {
+        lines.push_back(line);
+    }
+
+    inputFile.close();
+
+    // Find and update the line corresponding to the owner
+    for (std::string& userLine : lines) {
+        std::istringstream iss(userLine);
+        std::string username, password, credit, score, ratingTime;
+        iss >> username >> password >> credit >> score >> ratingTime;
+
+        if (username == ownerUsername) {
+            // Calculate the new score and round it to the nearest integer
+            double currentScore, newOwnerScore;
+            int ratingCount;
+
+            // Parsing score
+            std::istringstream(score) >> currentScore;
+
+            // Parsing ratingTime
+            std::istringstream(ratingTime) >> ratingCount;
+
+            newOwnerScore = (currentScore * ratingCount + newScore) / (ratingCount + 1);
+            int newOwnerScoreRounded = static_cast<int>(std::round(newOwnerScore)); // Round to nearest integer
+            userLine = username + " " + password + " " + credit + " " + std::to_string(newOwnerScoreRounded) + " " + std::to_string(ratingCount + 1);
+            break;
+        }
+    }
+
+    // Write the updated data back to the userAccount.txt file
+    std::ofstream outputFile("userAccount.txt");
+    for (const std::string& updatedLine : lines) {
+        outputFile << updatedLine << "\n";
+    }
+
+    outputFile.close();
+}
+
+// Function to update the motorbike's score, rating time, and comment in the ProductDetail.txt file
+void updateMotorbikeInfoInFile(int motorbikeID, double renterRating, const std::string& comment) {
+    // Read the entire file into memory
+    std::ifstream inputFile("ProductDetail.txt");
+    if (!inputFile.is_open()) {
+        std::cerr << "Failed to open ProductDetail.txt for reading." << std::endl;
+        return;
+    }
+
+    std::vector<std::string> fileContents;
+    std::string line;
+
+    while (std::getline(inputFile, line)) {
+        fileContents.push_back(line);
+    }
+
+    inputFile.close();
+
+    // Locate the motorbike's position in the file and update it
+    bool foundMotorbike = false;
+    double originalScore = 0.0; // Initialize these variables outside the loop
+    int ratingTime = 0;
+    std::string latestComment = "";
+
+    for (size_t i = 0; i < fileContents.size(); ++i) {
+        if (fileContents[i].find("MotorbikeID: " + std::to_string(motorbikeID)) != std::string::npos) {
+            foundMotorbike = true;
+
+            // Find the line numbers for "Score," "Rating time," and "Latest comment"
+            size_t scoreLineNum = i + 11;
+            size_t ratingTimeLineNum = i + 14;
+            size_t commentLineNum = i + 12;
+
+            if (scoreLineNum < fileContents.size() && ratingTimeLineNum < fileContents.size() && commentLineNum < fileContents.size()) {
+                // Extract and parse the originalScore, ratingTime, and latestComment
+                std::istringstream scoreStream(fileContents[scoreLineNum].substr(7));
+                std::istringstream ratingTimeStream(fileContents[ratingTimeLineNum].substr(13));
+                latestComment = fileContents[commentLineNum].substr(16);
+
+                scoreStream >> originalScore;
+                ratingTimeStream >> ratingTime;
+
+                // Update the score, rating time, and comment
+                double updatedScore = ((originalScore * ratingTime) + renterRating) / (ratingTime + 1);
+
+                // Round the updatedScore to the nearest integer
+                int roundedScore = static_cast<int>(std::round(updatedScore));
+
+                int updatedRatingTime = ratingTime + 1;
+
+                // Replace the original "Score," "Rating time," and "Latest comment" lines with updated values
+                fileContents[scoreLineNum] = "Score: " + std::to_string(roundedScore);
+                fileContents[ratingTimeLineNum] = "Rating time: " + std::to_string(updatedRatingTime);
+                fileContents[commentLineNum] = "Latest comment: " + comment;
+            } else {
+                std::cerr << "Error: Score, Rating time, and/or Latest comment lines not found for MotorbikeID " << motorbikeID << std::endl;
+                return;
+            }
+        }
+    }
+
+    // Write the updated content back to the file
+    std::ofstream outputFile("ProductDetail.txt");
+    if (!outputFile.is_open()) {
+        std::cerr << "Failed to open ProductDetail.txt for writing." << std::endl;
+        return;
+    }
+
+    for (const std::string& content : fileContents) {
+        outputFile << content << std::endl;
+    }
+
+    outputFile.close();
+
+    if (!foundMotorbike) {
+        std::cerr << "Motorbike with ID " << motorbikeID << " not found in ProductDetail.txt." << std::endl;
+    }
+}
+
 // Function to send a return message
 void sendReturnMessage(const std::string& ownerUsername, int motorbikeID, const std::string& renterUsername) {
     // Create a return message
@@ -755,21 +947,8 @@ void sendReturnMessage(const std::string& ownerUsername, int motorbikeID, const 
     ownerReturnMessages[ownerUsername].push_back(message);
 }
 
-// Function to check return messages for the owner
-void checkReturnMessages(const std::string& ownerUsername) {
-    // Check if the owner has any return messages
-    if (ownerReturnMessages.find(ownerUsername) != ownerReturnMessages.end()) {
-        // Iterate through the owner's return messages
-        for (const ReturnMessage& message : ownerReturnMessages[ownerUsername]) {
-            std::cout << "Return Message: Motorbike with ID " << message.motorbikeID
-                      << " has been returned by " << message.renterUsername << "." << std::endl;
-        }
-    } else {
-        std::cout << "No return messages for user " << ownerUsername << "." << std::endl;
-    }
-}
 
-// Return the motorbike to the owner
+// Function to return the motorbike to the owner
 void returnMotorbike(const std::string& renterUsername) {
     int motorbikeID = -1; // Initialize to an invalid value
     std::string ownerUsername = ""; // Initialize owner's username
@@ -790,13 +969,46 @@ void returnMotorbike(const std::string& renterUsername) {
         return;
     }
 
-    // Update the Product status to "available" for the returned motorbike
-    updateProductStatus(std::to_string(motorbikeID), "available");
+    // Prompt the renter to enter a rating for the motorbike
+    double motorbikeRating;
+    std::cout << "Enter a rating (1 to 10) for the motorbike with ID " << motorbikeID << ": ";
+    std::cin >> motorbikeRating;
+
+    // Ensure the motorbike rating is within the valid range (1 to 10)
+    if (motorbikeRating < 1 || motorbikeRating > 10) {
+        std::cout << "Invalid rating for the motorbike. Please enter a rating between 1 and 10." << std::endl;
+        return;
+    }
+
+    // Prompt the renter to enter a comment for the motorbike
+    std::string motorbikeComment;
+    std::cout << "Enter a comment for the motorbike with ID " << motorbikeID << ": ";
+    std::cin.ignore(); // Ignore newline character
+    std::getline(std::cin, motorbikeComment);
+
+    // Update the motorbike's score, rating time, and comment in the ProductDetail.txt file
+    updateMotorbikeInfoInFile(motorbikeID, motorbikeRating, motorbikeComment);
+
+    // Prompt the renter to enter a rating for the owner
+    double ownerRating;
+    std::cout << "Enter a rating (1 to 10) for the owner " << ownerUsername << ": ";
+    std::cin >> ownerRating;
+
+    // Ensure the owner rating is within the valid range (1 to 10)
+    if (ownerRating < 1 || ownerRating > 10) {
+        std::cout << "Invalid rating for the owner. Please enter a rating between 1 and 10." << std::endl;
+        return;
+    }
+
+    // Update the owner's score in memory and in the userAccount.txt file
+    updateOwnerScoreInFile(ownerUsername, ownerRating);
 
     std::cout << "Motorbike with ID " << motorbikeID << " has been returned by " << renterUsername << "." << std::endl;
 
+    // Update the Product status to "available" for the returned motorbike
+    updateProductStatus(std::to_string(motorbikeID), "available");
+    
     // Send a return message to the owner (assuming sendReturnMessage exists)
     sendReturnMessage(ownerUsername, motorbikeID, renterUsername);
 }
-
 #endif // RENTAL_SYSTEM_H

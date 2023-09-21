@@ -7,6 +7,9 @@
 #include "searchEngine.h"
 #include "rental_system.h"
 #include <limits> // Include this header for numeric_limits
+#include <fstream>
+#include <string>
+#include "vector"
 
 using namespace std;
 
