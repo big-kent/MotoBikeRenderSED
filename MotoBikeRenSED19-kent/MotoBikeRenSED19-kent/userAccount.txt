@@ -1,2 +1,3 @@
 kent kent 60 10 1
 khanh khanh 40 10 1
+trinh trinh 20 0 0

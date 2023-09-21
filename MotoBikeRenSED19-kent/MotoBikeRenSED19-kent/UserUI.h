@@ -157,18 +157,17 @@ public:
                 }
 
                 found = true;
-                break;
-            }
-            else{
-                std::cout << "\nPlease fill your profile first" << std::endl;
-                break;
+                break; // Exit the loop after editing
             }
         }
 
         if (!found) {
             std::cout << "User profile not found." << std::endl;
+        } else {
+            std::cout << "\nPlease fill your profile first" << std::endl;
         }
     }
+
 };
 
 #endif // USERUI_H
