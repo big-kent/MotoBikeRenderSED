@@ -92,12 +92,6 @@ void displayMotorbikeData(const std::vector<Motorbike>& motorbikes, const std::s
             found = true;
         }
     }
-
-    if (!found) {
-        std::cout << "No available motorbikes found in " << desiredCity << " city with a score lower than or equal to your score." << std::endl;
-        return;
-    }
-    return;
 }
 
 void sendRentalRequest(const std::string& renterUsername, int motorbikeID, const std::string& ownerUsername) {
@@ -490,6 +484,21 @@ void rentMotorbike(const std::string& username) {
     // Call the function to display motorbike data with the user's score
     displayMotorbikeData(motorbikes, desiredCity, userScore, userCredit);
 
+    // Check if no motorbikes were found for the desired city
+    bool motorbikesFound = false;
+
+    for (const Motorbike& bike : motorbikes) {
+        if (bike.City == desiredCity && bike.ProductStatus == "available" && (userScore >= bike.Score || userScore == 0) && userCredit > bike.Credit) {
+            motorbikesFound = true;
+            break; // Exit the loop if at least one motorbike is found
+        }
+    }
+
+    if (!motorbikesFound) {
+        std::cout << "No available motorbikes found in " << desiredCity << " city with a score lower than or equal to your score." << std::endl;
+        return; // Exit the program
+    }
+
     // Ask the user to enter the ID of the motorbike they want to rent
     int motorbikeID;
     std::cout << "Enter the ID of the motorbike you want to rent: ";
@@ -497,6 +506,18 @@ void rentMotorbike(const std::string& username) {
 
     // Check if the selected motorbike is available and if the user's score is sufficient
     bool motorbikeFound = false;
+
+    for (const Motorbike& bike : motorbikes) {
+        if (bike.MotorbikeID == motorbikeID && bike.ProductStatus == "available" && (userScore >= bike.Score || userScore == 0) && userCredit > bike.Credit) {
+            motorbikeFound = true;
+            break; // Exit the loop if the desired motorbike is found
+        }
+    }
+
+    if (!motorbikeFound) {
+        std::cout << "Invalid motorbike ID or the selected motorbike is not available or your score is insufficient." << std::endl;
+        return; // Exit the program
+    }
 
     for (Motorbike& bike : motorbikes) {
         if (bike.MotorbikeID == motorbikeID && bike.City == desiredCity && bike.ProductStatus == "available" && (userScore >= bike.Score || userScore == 0) && userCredit > bike.Credit) {
@@ -1011,4 +1032,5 @@ void returnMotorbike(const std::string& renterUsername) {
     // Send a return message to the owner (assuming sendReturnMessage exists)
     sendReturnMessage(ownerUsername, motorbikeID, renterUsername);
 }
+
 #endif // RENTAL_SYSTEM_H
