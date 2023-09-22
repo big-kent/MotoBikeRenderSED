@@ -1,11 +1,11 @@
 #include <iostream>
-#include "UserLogin.h"
-#include "RegisterAccount.h"
-#include "AdminUI.h"
-#include "ProductDetails.h"
-#include "UserUI.h"
-#include "searchEngine.h"
-#include "rental_system.h"
+#include "header/UserLogin.h"
+#include "header/RegisterAccount.h"
+#include "header/AdminUI.h"
+#include "header/ProductDetails.h"
+#include "header/UserUI.h"
+#include "header/searchEngine.h"
+#include "header/rental_system.h"
 #include <limits> // Include this header for numeric_limits
 #include <fstream>
 #include <string>
