@@ -46,7 +46,7 @@ int main() {
                     cout << "2. View Motorbikes Available" << endl;
                     cout << "3. Exit" << endl;
                     cout << "Enter choice: ";
-                    if (!(cin >> userType)) {
+                    if (!(std::cin >> userType) || userType < 1 || userType > 3) {
                         // Input is not an integer
                         cin.clear(); // Clear error flags
                         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the input buffer

@@ -60,6 +60,7 @@
         "deque": "cpp",
         "memory_resource": "cpp",
         "optional": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "set": "cpp"
     }
 }

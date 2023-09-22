@@ -1,4 +1,3 @@
-
 #include "rental_system.h"
 
 #include <iostream>
@@ -12,8 +11,8 @@
 void UserUI::showMenu(const std::string &username)
 {
     int choice;
-
-    while (true)
+    bool returnToMainMenu = false;
+    while (!returnToMainMenu)
     {
         std::cout << "\nMember Menu for " << username << ":" << std::endl;
         std::cout << "1. Edit My Profile" << std::endl;
@@ -72,8 +71,7 @@ void UserUI::showMenu(const std::string &username)
             addMoreCreditPointsToYourAccount(username);
             break;
         case 11:
-            std::cout << "\nExiting " << username << "'s Menu. Goodbye!!!\n"
-                      << std::endl;
+            std::cout << "\nExiting " << username << "'s Menu. Goodbye!!!\n" << std::endl;
             return;
         default:
             break;
@@ -175,17 +173,7 @@ void UserUI::editUserProfile(const std::string &username)
             }
 
             found = true;
-            break; // Exit the loop after editing
         }
-    }
-
-    if (!found)
-    {
-        std::cout << "User profile not found." << std::endl;
-    }
-    else
-    {
-        std::cout << "\nPlease fill your profile first" << std::endl;
     }
 }
 
