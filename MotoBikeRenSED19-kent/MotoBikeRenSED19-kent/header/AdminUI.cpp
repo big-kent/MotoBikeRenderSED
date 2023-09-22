@@ -82,11 +82,12 @@ void AdminUI::viewAllUserAccounts()
         std::string password;
         std::string creditPoint;
         std::string Score;
+        std::string ratingTime;
 
         std::cout << "\nList of User Accounts:" << std::endl;
-        while (userFile >> username >> password >> creditPoint >> Score)
+        while (userFile >> username >> password >> creditPoint >> Score >> ratingTime)
         {
-            std::cout << "Username: " << username << "\tPassword: " << password << "\tCredit Point: " << creditPoint << "\t Score: " << Score << "\n"
+            std::cout << "Username: " << username << "\tPassword: " << password << "\tCredit Point: " << creditPoint << "\tScore: " << Score << "\tRating time: " << ratingTime << "\n"
                       << std::endl;
         }
 

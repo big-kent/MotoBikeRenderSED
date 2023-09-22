@@ -1,8 +1,2 @@
 kent kent 60 10 1
 khanh khanh 40 10 1
-trinh trinh 20 0 0
-linh' linh 20 0 0
-Linh linh 20 0 0
-313213 123 20 0 0
-46465 123 20 0 0
-4646897 456 20 0 0
