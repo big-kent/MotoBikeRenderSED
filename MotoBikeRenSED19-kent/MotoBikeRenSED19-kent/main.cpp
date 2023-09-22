@@ -9,9 +9,28 @@
 #include <limits> // Include this header for numeric_limits
 #include <fstream>
 #include <string>
-#include "vector"
+#include <vector>
+#include <cctype> // Include this header for isdigit and isalpha functions
 
 using namespace std;
+
+bool containsDigit(const string& str) {
+    for (char c : str) {
+        if (isdigit(c)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool containsLetter(const string& str) {
+    for (char c : str) {
+        if (isalpha(c)) {
+            return true;
+        }
+    }
+    return false;
+}
 
 int main() {
     int userType;
@@ -61,48 +80,58 @@ int main() {
                                 string newUsername;
                                 cin >> newUsername;
 
+                                if (!containsDigit(newUsername) || !containsLetter(newUsername)) {
+                                    cout << "Username must contain both letters and numbers. Please try again." << endl;
+                                    break;
+                                }
+
                                 cout << "Please enter a new password: ";
                                 string newPassword;
                                 cin >> newPassword;
+
+                                if (!containsDigit(newPassword) || !containsLetter(newPassword)) {
+                                    cout << "Password must contain both letters and numbers. Please try again." << endl;
+                                    break;
+                                }
 
                                 cout << "Please confirm your password: ";
                                 string confirmPassword;
                                 cin >> confirmPassword;
 
-                                RegisterAccount::PaymentMethod paymentMethod = RegisterAccount::selectPaymentMethod();
-
-                                cout << "Please enter your full name: ";
-                                string fullName;
-                                cin.ignore(); // Clear the newline left in the buffer
-                                getline(cin, fullName);
-
-                                cout << "Please enter your phone number: ";
-                                string phone;
-                                cin >> phone;
-
-                                cout << "Please enter your ID type (e.g., passport): ";
-                                string idType;
-                                cin.ignore();
-                                getline(cin, idType);
-
-                                cout << "Please enter your ID number: ";
-                                string idNumber;
-                                cin >> idNumber;
-
-                                cout << "Please enter your driver's license number: ";
-                                string licenseNumber;
-                                cin >> licenseNumber;
-
-                                cout << "Please enter the expiry date of your driver's license (e.g., MM/YY): ";
-                                string expiryDate;
-                                cin >> expiryDate;
-
-                                cout << "Please enter the city you are live in (e.g, Ho Chi Minh/ Ha Noi): ";
-                                string City;
-                                cin.ignore();
-                                getline(cin, City);
-
                                 if (newPassword == confirmPassword) {
+                                    RegisterAccount::PaymentMethod paymentMethod = RegisterAccount::selectPaymentMethod();
+
+                                    cout << "Please enter your full name: ";
+                                    string fullName;
+                                    cin.ignore(); // Clear the newline left in the buffer
+                                    getline(cin, fullName);
+
+                                    cout << "Please enter your phone number: ";
+                                    string phone;
+                                    cin >> phone;
+
+                                    cout << "Please enter your ID type (e.g., passport): ";
+                                    string idType;
+                                    cin.ignore();
+                                    getline(cin, idType);
+
+                                    cout << "Please enter your ID number: ";
+                                    string idNumber;
+                                    cin >> idNumber;
+
+                                    cout << "Please enter your driver's license number: ";
+                                    string licenseNumber;
+                                    cin >> licenseNumber;
+
+                                    cout << "Please enter the expiry date of your driver's license (e.g., MM/YY): ";
+                                    string expiryDate;
+                                    cin >> expiryDate;
+
+                                    cout << "Please enter the city you live in (e.g, Ho Chi Minh/ Ha Noi): ";
+                                    string City;
+                                    cin.ignore();
+                                    getline(cin, City);
+
                                     if (RegisterAccount::registerUser(newUsername, newPassword, confirmPassword, paymentMethod, fullName, phone, idType, idNumber, licenseNumber, expiryDate, City)) {
                                         cout << "Registration successful. You can now log in as a user." << endl;
                                         cout << "\nLogin successfully. Welcome, our member " << newUsername << "!" << endl;
