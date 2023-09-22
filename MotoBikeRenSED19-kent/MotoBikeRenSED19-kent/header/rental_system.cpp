@@ -671,41 +671,160 @@ void applyMotorbikeForRent(const std::string &username)
 
         std::cin.ignore(); // Clear the newline left in the buffer
 
+        std::string model; // Declare model as a string
+
         std::cout << "Model: ";
         std::getline(std::cin, model);
+
+        // Check if the input for model is an integer
+        bool isIntegerModel = true;
+        for (char c : model) {
+            if (!std::isdigit(c)) {
+                isIntegerModel = false;
+                break;
+            }
+        }
+
+        if (isIntegerModel) {
+            std::cout << "Invalid model. Please enter a string, not an integer." << std::endl;
+            return; // Exit the function without adding the motorbike
+        }
+
+
+        std::string color; // Declare color as a string
 
         std::cout << "Color: ";
         std::getline(std::cin, color);
 
+        // Check if the input for color is an integer
+        bool isIntegerColor = true;
+        for (char c : color) {
+            if (!std::isdigit(c)) {
+                isIntegerColor = false;
+                break;
+            }
+        }
+
+        if (isIntegerColor) {
+            std::cout << "Invalid color. Please enter a string, not an integer." << std::endl;
+            return; // Exit the function without adding the motorbike
+        }
+
+
         std::cout << "Engine Size: ";
         std::getline(std::cin, engineSize);
+
+        // Use std::istringstream to convert the engineSizeStr to an integer
+        std::istringstream engineSizeStream(engineSize);
+        int engineSizeInt;
+
+        if (!(engineSizeStream >> engineSizeInt))
+        {
+            std::cout << "Invalid engine size. Please enter an integer." << std::endl;
+            return; // Exit the function without adding the motorbike
+        }
 
         std::cout << "Transmission Mode (Automatic, Manual, Electronic): ";
         std::getline(std::cin, transmissionMode);
 
+        // Check if the entered transmission mode is valid
+        if (transmissionMode != "Automatic" && transmissionMode != "Manual" && transmissionMode != "Electronic")
+        {
+            std::cout << "Invalid transmission mode. Please choose from Automatic, Manual, or Electronic." << std::endl;
+            return; // Exit the function without adding the motorbike
+        }
+
+        std::string yearMade; // Declare yearMade as a string
+
         std::cout << "Year Made: ";
         std::getline(std::cin, yearMade);
+
+        // Use std::istringstream to convert the yearMade to an integer
+        std::istringstream yearMadeStream(yearMade);
+        int yearMadeInt;
+
+        if (!(yearMadeStream >> yearMadeInt) || yearMadeInt < 0) {
+            std::cout << "Invalid year made. Please enter a positive integer." << std::endl;
+            return; // Exit the function without adding the motorbike
+        }
+
+
+        std::string description; // Declare description as a string
 
         std::cout << "Description: ";
         std::getline(std::cin, description);
 
+        // Check if the description is a whole integer
+        bool isWholeInteger = true;
+        for (char c : description) {
+            if (!std::isdigit(c)) {
+                isWholeInteger = false;
+                break;
+            }
+        }
+
+        if (isWholeInteger) {
+            std::cout << "Invalid description. Description cannot be a whole integer." << std::endl;
+            return; // Exit the function without adding the motorbike
+        }
+
         // Set the owner username to be the same as the applying user's username
         std::string ownerUsername = username;
 
-        std::cout << "Expected Rented Rate: ";
+        std::string rentedRate; // Declare rentedRate as a string
+
+        std::cout << "Expected Rented Rate (e.g., 7%): ";
         std::getline(std::cin, rentedRate);
 
-        std::cout << "Rate ID: ";
+        // Check if rentedRate is in the correct format (e.g., "7%")
+        std::istringstream rentedRateStream(rentedRate);
+        double rateValue;
+        char percentSign;
+
+        if (!(rentedRateStream >> rateValue >> percentSign) || percentSign != '%' || rateValue < 0) {
+            std::cout << "Invalid Expected Rented Rate format. Please use a positive number followed by '%' (e.g., 7%)." << std::endl;
+            return; // Exit the function without adding the motorbike
+        }
+
+        std::string rateId; // Declare rateId as a string
+
+        std::cout << "Rate ID (numeric value only): ";
         std::getline(std::cin, rateId);
+
+        // Check if rateId is a valid numeric value
+        std::istringstream rateIdStream(rateId);
+        int rateIdInt;
+
+        if (!(rateIdStream >> rateIdInt) || rateIdInt < 0) {
+            std::cout << "Invalid Rate ID. Please enter a valid numeric value." << std::endl;
+            return; // Exit the function without adding the motorbike
+        }
 
         std::cout << "Latest comment: ";
         std::getline(std::cin, Comment);
 
-        std::cout << "Credit needed for renting: ";
+        std::string Credit; // Declare Credit as a string
+
+        std::cout << "Credit needed for renting (positive integer only): ";
         std::getline(std::cin, Credit);
 
+        // Check if Credit is a positive integer
+        std::istringstream CreditStream(Credit);
+        int creditValue;
+
+        if (!(CreditStream >> creditValue) || creditValue <= 0) {
+            std::cout << "Invalid credit value. Please enter a positive integer." << std::endl;
+            return; // Exit the function without adding the motorbike
+        }
         std::cout << "City: ";
         std::getline(std::cin, City);
+
+        // Check if the entered city is within the allowed service areas
+        if (City != "Ho Chi Minh" && City != "Ha Noi")
+        {
+            std::cout << "This city is out of our service scope." << std::endl;
+            return; // Exit the function without adding the motorbike
+        }
 
         // Write a blank line before writing the new motorbike details to the file
         productFile << "\n";
